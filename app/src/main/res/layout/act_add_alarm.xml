@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/layout_toolbar" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/general_margin"
+                android:layout_marginTop="@dimen/general_margin_4dp"
+                android:layout_marginEnd="@dimen/general_margin"
+                android:layout_marginBottom="@dimen/general_margin_8dp"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/add_alarm_edt_alarm_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/general_margin"
+                    android:layout_marginTop="@dimen/general_margin_4dp"
+                    android:layout_marginEnd="@dimen/general_margin"
+                    android:hint="@string/add_alarm_input_name"
+                    android:textColor="@color/color_black_opa_87"
+                    android:textColorHint="@color/color_black_opa_38"
+                    android:textSize="@dimen/text_view_caption" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:text="@string/alarm_name"
+                    android:textColor="@color/color_black_opa_87"
+                    android:textSize="@dimen/text_view_sub_title" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/general_margin"
+                android:layout_marginTop="@dimen/general_margin_8dp"
+                android:layout_marginEnd="@dimen/general_margin"
+                android:layout_marginBottom="@dimen/general_margin_8dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/general_margin"
+                    android:layout_marginTop="@dimen/general_margin_4dp"
+                    android:layout_marginEnd="@dimen/general_margin"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/add_alarm_ic_calendar"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="@dimen/general_margin_8dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_calendar_48" />
+
+                    <TextView
+                        android:id="@+id/add_alarm_tv_choose_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="@dimen/general_margin_8dp"
+                        android:text="10/03/2017"
+                        android:textColor="@color/color_black_opa_87"
+                        android:textSize="@dimen/text_view_body" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/general_margin"
+                    android:layout_marginTop="@dimen/general_margin_4dp"
+                    android:layout_marginEnd="@dimen/general_margin"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/add_alarm_ic_clock"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="@dimen/general_margin_8dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_clock_48" />
+
+                    <TextView
+                        android:id="@+id/add_alarm_tv_choose_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="08:00"
+                        android:textColor="@color/color_black_opa_87"
+                        android:textSize="@dimen/text_view_body" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:text="@string/alarm_time"
+                    android:textColor="@color/color_black_opa_87"
+                    android:textSize="@dimen/text_view_sub_title" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/general_margin"
+                android:layout_marginTop="@dimen/general_margin_8dp"
+                android:layout_marginEnd="@dimen/general_margin"
+                android:layout_marginBottom="@dimen/general_margin_8dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/general_margin"
+                    android:layout_marginEnd="@dimen/general_margin"
+                    android:gravity="start"
+                    android:orientation="vertical">
+
+                    <CheckBox
+                        android:id="@+id/add_alarm_cb_file_type"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginTop="@dimen/general_margin_4dp"
+                        android:gravity="center_vertical"
+                        android:text="@string/add_alarm_folder"
+                        android:textColor="@color/color_black_opa_87" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="@dimen/general_margin_4dp"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/add_alarm_browse_file"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_marginEnd="@dimen/general_margin_8dp"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/ic_music_folder_50" />
+
+                        <TextView
+                            android:id="@+id/add_alarm_tv_choose_file"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:ellipsize="end"
+                            android:gravity="center_vertical|start"
+                            android:maxLines="3"
+                            android:text="@string/add_alarm_select_file_or_folder"
+                            android:textColor="@color/color_black_opa_87"
+                            android:textSize="@dimen/text_view_body" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:text="@string/add_alarm_file"
+                    android:textColor="@color/color_black_opa_87"
+                    android:textSize="@dimen/text_view_sub_title" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/general_margin"
+                android:layout_marginTop="@dimen/general_margin_8dp"
+                android:layout_marginEnd="@dimen/general_margin"
+                android:layout_marginBottom="@dimen/general_margin_8dp"
+                android:orientation="vertical">
+
+                <Spinner
+                    android:id="@+id/add_alarm_sp_alarm_type"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginBottom="@dimen/general_margin_4dp"
+                    android:gravity="start"
+                    android:popupBackground="@color/color_white"
+                    android:textColor="@color/color_black_opa_87"
+                    android:textSize="16sp" />
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:text="@string/add_alarm_play_type"
+                    android:textColor="@color/color_black_opa_87"
+                    android:textSize="@dimen/text_view_sub_title" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/general_margin"
+                android:layout_marginTop="@dimen/general_margin_8dp"
+                android:layout_marginEnd="@dimen/general_margin"
+                android:layout_marginBottom="@dimen/general_margin_8dp"
+                android:orientation="vertical">
+
+                <Spinner
+                    android:id="@+id/add_alarm_sp_loop_type"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginTop="@dimen/general_margin_4dp"
+                    android:gravity="start"
+                    android:popupBackground="@color/color_white"
+                    android:textColor="@color/color_black_opa_87"
+                    android:textSize="16sp" />
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:text="@string/add_alarm_loop"
+                    android:textColor="@color/color_black_opa_87"
+                    android:textSize="@dimen/text_view_sub_title" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/general_margin"
+                android:layout_marginTop="@dimen/general_margin_8dp"
+                android:layout_marginEnd="@dimen/general_margin"
+                android:layout_marginBottom="@dimen/general_margin_8dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/general_margin"
+                    android:layout_marginEnd="@dimen/general_margin"
+                    android:gravity="start">
+
+                    <EditText
+                        android:id="@+id/add_alarm_edt_time_alarm"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="@dimen/general_margin"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:hint="@string/add_alarm_input_play_time"
+                        android:inputType="number"
+                        android:maxLines="1"
+                        android:textColor="@color/color_black_opa_87"
+                        android:textColorHint="@color/color_black_opa_38"
+                        android:textSize="@dimen/text_view_body" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="@string/add_alarm_second"
+                        android:textColor="@color/color_black_opa_87"
+                        android:textSize="@dimen/text_view_body" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:text="@string/add_alarm_play_time"
+                    android:textColor="@color/color_black_opa_87"
+                    android:textSize="@dimen/text_view_sub_title" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/general_margin"
+                android:layout_marginTop="@dimen/general_margin_8dp"
+                android:layout_marginEnd="@dimen/general_margin"
+                android:layout_marginBottom="@dimen/general_margin_8dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/general_margin"
+                    android:layout_marginTop="@dimen/general_margin_4dp"
+                    android:layout_marginEnd="@dimen/general_margin"
+                    android:gravity="start"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/add_alarm_edt_loop_times"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="@dimen/general_margin"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:hint="@string/add_alarm_input_loop_times"
+                        android:inputType="number"
+                        android:maxLines="1"
+                        android:textColor="@color/color_black_opa_87"
+                        android:textSize="@dimen/text_view_body" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="@string/add_alarm_times"
+                        android:textColor="@color/color_black_opa_87"
+                        android:textSize="@dimen/text_view_body" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:text="@string/add_alarm_loop_times"
+                    android:textColor="@color/color_black_opa_87"
+                    android:textSize="@dimen/text_view_sub_title" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/general_margin"
+                android:layout_marginEnd="@dimen/general_margin"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/add_alarm_calendar_type"
+                    android:textSize="@dimen/text_view_body" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <include layout="@layout/layout_toolbar" />
+</LinearLayout>

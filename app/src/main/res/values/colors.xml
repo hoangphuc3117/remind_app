@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="color_black">#000000</color>
+    <color name="color_black_opa_87">#DE000000</color>
+    <color name="color_black_opa_54">#8A000000</color>
+    <color name="color_black_opa_38">#61000000</color>
+
+    <color name="color_white">#FFFFFF</color>
+    <color name="color_white_opa_87">#DEFFFFFF</color>
+    <color name="color_white_opa_54">#8AFFFFFF</color>
+    <color name="color_white_opa_38">#61FFFFFF</color>
+
+    <color name="color_blue_500">#2196F3</color>
+
+    <color name="color_light_blue_A100">#80D8FF</color>
+    <color name="color_light_blue_A200">#40C4FF</color>
+    <color name="color_light_blue_A">#64b7f9</color>
+
+    <color name="color_grey_400">#BDBDBD</color>
+
+    <color name="color_red_500">#F44336</color>
+
+    <color name="color_green_A400">#00E676</color>
+    <color name="color_green_200">#A5D6A7</color>
+
+    <color name="color_yellow_A200">#FFFF00</color>
+    <color name="color_yellow_500">#FFEB3B</color>
+    <color name="color_yellow_600">#FDD835</color>
+</resources>

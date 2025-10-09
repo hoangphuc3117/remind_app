@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/color_blue_500">
+
+            <include
+                android:id="@+id/alarm_toolbar"
+                layout="@layout/layout_toolbar" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/alarm_title"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/general_margin"
+            android:paddingEnd="@dimen/general_margin"
+            android:weightSum="1">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/alarm_sharp_sign"
+                android:layout_weight="0.1"
+                android:textSize="@dimen/text_view_sub_title"
+                android:textColor="@color/color_black_opa_54" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/alarm_name"
+                android:layout_weight="0.55"
+                android:textSize="@dimen/text_view_sub_title"
+                android:textColor="@color/color_black_opa_54" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/alarm_time"
+                android:layout_weight="0.35"
+                android:textSize="@dimen/text_view_sub_title"
+                android:textColor="@color/color_black_opa_54" />
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/alarm_rlv_alarms"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/color_white"
+            android:visibility="visible" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/alarm_loading_icon"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/color_white"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="@dimen/width_percent_50"
+            android:layout_height="@dimen/width_percent_50"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="30dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_app_round_no_background" />
+    </RelativeLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAddAlarm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="12dp"
+        android:src="@drawable/fab_add"
+        android:layout_marginBottom="12dp" />
+</RelativeLayout>
+
+
+

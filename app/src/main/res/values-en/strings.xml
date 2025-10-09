@@ -1,0 +1,57 @@
+<resources>
+<string name="app_name">Reminds</string>
+<string name="title_alarm">Reminds</string>
+<string name="title_add_alarm">Add New Remind</string>
+<string name="title_edit_alarm">Edit Remind</string>
+<string name="title_detail_alarm">Remind Detail</string>
+
+<string name="alarm_sharp_sign">#</string>
+<string name="alarm_name">Remind</string>
+<string name="alarm_time">Time Alarm</string>
+
+<string name="add_alarm_file">File</string>
+<string name="add_alarm_folder">Folder</string>
+<string name="add_alarm_play_type">Alarm Type</string>
+<string name="add_alarm_play_time">Alarm Duration Time</string>
+<string name="add_alarm_loop">Loop</string>
+<string name="add_alarm_loop_times">Loop Times</string>
+<string name="add_alarm_calendar_type">Loại lịch</string>
+<string name="add_alarm_select_file_or_folder">Select File Or Folder</string>
+<string name="add_alarm_second">seconds</string>
+<string name="add_alarm_times">times</string>
+<string name="add_alarm_input_name">Input Remind Title</string>
+<string name="add_alarm_input_play_time">Input Alarm Time</string>
+<string name="add_alarm_input_loop_times">Input Loop Times</string>
+<string name="dialog_dismiss">Dismiss</string>
+<string name="dialog_hide">Hide</string>
+<string name="dialog_yes">Yes</string>
+<string name="dialog_no">No</string>
+<string name="delete_alarm">Delete Remind</string>
+<string name="delete_alarm_description">Do you want to delete remind "%s"?</string>
+
+<string name="description" formatted="false">Loop : %s</string>
+<string name="description2" formatted="false">File Name : %s \n Playing position: %s</string>
+<string name="time_alarm" formatted="false">Alarm Time : %s </string>
+<string name="next_time_alarm" formatted="false">Next Alarm Time: %s</string>
+<string name="app_version">App Version: %s</string>
+<string name="contact_email">Email Feedback: %s</string>
+<string name="close">Close</string>
+
+<!--Popup Menu-->
+<string name="popup_menu_delete">Delete</string>
+<string name="popup_menu_edit">Edit</string>
+<string name="popup_menu_detail">Detail</string>
+
+<string-array name="alarm_play_type">
+    <item>Beginning</item>
+    <item>Continue</item>
+</string-array>
+
+<string-array name="alarm_loop_type">
+    <item>No Loop</item>
+    <item>Everyday</item>
+    <item>Every week</item>
+    <item>Every month</item>
+</string-array>
+
+</resources>

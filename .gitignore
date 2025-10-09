@@ -1,0 +1,5 @@
+.idea/compiler.xml
+/.idea
+*.bin
+/.gradle
+/.vscode

@@ -1,0 +1,66 @@
+<resources>
+    <string name="app_name">Nhắc Nhở</string>
+    <string name="title_alarm">Nhắc Nhở</string>
+    <string name="title_add_alarm">Thêm nhắc nhở</string>
+    <string name="title_edit_alarm">Chỉnh sửa nhắc nhở</string>
+    <string name="title_detail_alarm">Chi tiết nhắc nhở</string>
+
+    <string name="alarm_sharp_sign">#</string>
+    <string name="alarm_name">Nhắc nhở</string>
+    <string name="alarm_time">Thời gian</string>
+
+    <string name="add_alarm_file">Tập tin</string>
+    <string name="add_alarm_folder">Thư mục</string>
+    <string name="add_alarm_play_type">Kiểu phát</string>
+    <string name="add_alarm_play_time">Thời lượng phát</string>
+    <string name="add_alarm_loop">Chu kỳ lập</string>
+    <string name="add_alarm_loop_times">Số lần lặp lại</string>
+    <string name="add_alarm_calendar_type">Loại lịch</string>
+    <string name="add_alarm_select_file_or_folder">Chọn tập tin hay thư mục</string>
+    <string name="add_alarm_second">Giây</string>
+    <string name="add_alarm_times">Lần</string>
+    <string name="add_alarm_input_name">Nhập nhắc nhở</string>
+    <string name="add_alarm_input_play_time">Nhập thời lượng phát</string>
+    <string name="add_alarm_input_loop_times">Nhập số lần lặp lại</string>
+    <string name="dialog_dismiss">Ngưng nhắc nhở</string>
+    <string name="dialog_hide">Ẩn nhắc nhở</string>
+    <string name="dialog_yes">Có</string>
+    <string name="dialog_no">Không</string>
+    <string name="delete_alarm">Xoá nhắc nhở</string>
+    <string name="delete_alarm_description">Bạn có chắc chắn muốn xoá nhắc nhở "%s" không?</string>
+
+    <string name="description" formatted="false">Lần lập : %s</string>
+    <string name="description2" formatted="false">Tên file : %s \n Playing position: %s</string>
+    <string name="time_alarm" formatted="false">Thời gian phát : %s </string>
+    <string name="next_time_alarm" formatted="false">Thời gian phát kế tiếp: %s</string>
+    <string name="app_version">Phiên bản: %s</string>
+    <string name="contact_email">Email góp ý: %s</string>
+    <string name="close">Đóng</string>
+
+    <!--Popup Menu-->
+    <string name="popup_menu_delete">Xóa</string>
+    <string name="popup_menu_edit">Thay đổi</string>
+    <string name="popup_menu_detail">Chi tiết</string>
+
+    <string-array name="alarm_play_type">
+        <item>Từ đầu</item>
+        <item>Tiếp tục</item>
+    </string-array>
+
+    <string-array name="alarm_loop_type">
+        <item>Không lặp lại</item>
+        <item>Hàng ngày</item>
+        <item>Hàng tuần</item>
+        <item>Hàng tháng</item>
+        <!--<item>2 phút</item>-->
+        <!--<item>3 phút</item>-->
+        <!--<item>5 phút</item>-->
+        <!--<item>10 phút</item>-->
+        <!--<item>15 phút</item>-->
+        <!--<item>20 phút</item>-->
+        <!--<item>25 phút</item>-->
+        <!--<item>30 phút</item>-->
+        <!--<item>60 phút</item>-->
+    </string-array>
+
+</resources>

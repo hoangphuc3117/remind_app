@@ -1,0 +1,47 @@
+<resources>
+    <!-- TextView -->
+    <dimen name="text_view_display_4">112sp</dimen>
+    <dimen name="text_view_display_3">56sp</dimen>
+    <dimen name="text_view_display_2">45sp</dimen>
+    <dimen name="text_view_display_1">34sp</dimen>
+    <dimen name="text_view_headline">24sp</dimen>
+    <dimen name="text_view_title">20sp</dimen>
+    <dimen name="text_view_sub_title">18sp</dimen>
+    <dimen name="text_view_sub_heading">18sp</dimen>
+    <dimen name="text_view_body">16sp</dimen>
+    <dimen name="text_view_caption">14sp</dimen>
+    <dimen name="text_view_button">16sp</dimen>
+
+    <!--floating action button-->
+    <dimen name="fab_size_normal">56dp</dimen>
+    <dimen name="fab_size_mini">40dp</dimen>
+    <dimen name="labels_text_size">14sp</dimen>
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="general_margin">16dp</dimen>
+    <dimen name="general_margin_2x">32dp</dimen>
+    <dimen name="general_margin_2dp">2dp</dimen>
+    <dimen name="general_margin_4dp">4dp</dimen>
+    <dimen name="general_margin_8dp">8dp</dimen>
+    <dimen name="general_margin_16dp">8dp</dimen>
+    <dimen name="general_margin_20dp">20dp</dimen>
+    <dimen name="general_margin_24dp">24dp</dimen>
+    <dimen name="general_margin_36dp">36dp</dimen>
+    <dimen name="general_margin_48dp">48dp</dimen>
+    <dimen name="general_margin_100dp">100dp</dimen>
+    <dimen name="general_header_margin">16dp</dimen>
+    <dimen name="general_item_margin">20dp</dimen>
+    <dimen name="general_view_line_divider_height">1dp</dimen>
+    <dimen name="general_vertical_spacing_between_items">8dp</dimen>
+    <dimen name="general_icon_width">36dp</dimen>
+    <dimen name="general_icon_height">36dp</dimen>
+    <dimen name="general_icon_width_small">24dp</dimen>
+    <dimen name="general_icon_height_small">24dp</dimen>
+    <dimen name="general_chart_height">200dp</dimen>
+
+    <!-- dialog message -->
+    <dimen name="dialog_margin_bottom">5dp</dimen>
+
+    <!--Toolbar-->
+    <dimen name="toolbar_height">56dp</dimen>
+</resources>
