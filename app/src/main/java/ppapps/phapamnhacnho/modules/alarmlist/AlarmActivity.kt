@@ -160,7 +160,11 @@ class AlarmActivity : BaseActivity() {
                 }
             }
         }
-        registerReceiver(broadcastReceiver, intentFilter)
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(broadcastReceiver, intentFilter, Context.RECEIVER_NOT_EXPORTED)
+        } else {
+            registerReceiver(broadcastReceiver, intentFilter)
+        }
     }
 
     fun showAlarm(alarm: AlarmModel) {

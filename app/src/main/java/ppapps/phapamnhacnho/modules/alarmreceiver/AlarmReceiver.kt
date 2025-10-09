@@ -11,28 +11,20 @@ import ppapps.phapamnhacnho.modules.alarmservice.AlarmService
 
 class AlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
-        val comp = context?.let {
-            ComponentName(
-                it.packageName,
-                AlarmService::class.java.name
-            )
-        }
-        
-        // Use modern foreground service approach for Android 8.0+
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            context?.let { ctx ->
-                intent?.setComponent(comp)?.let { serviceIntent ->
-                    ContextCompat.startForegroundService(ctx, serviceIntent)
-                }
-            }
-        } else {
-            context?.let { ctx ->
-                intent?.setComponent(comp)?.let { serviceIntent ->
-                    ctx.startService(serviceIntent)
-                }
-            }
-        }
-        
+        if (context == null || intent == null) return
+
+        // Extract alarm code or other data from intent
+        val alarmCode = intent.getLongExtra(ppapps.phapamnhacnho.constant.AlarmConstant.KEY_ALARM_CODE, -1)
+
+        // Schedule work with WorkManager
+        val workData = androidx.work.Data.Builder()
+            .putLong(ppapps.phapamnhacnho.constant.AlarmConstant.KEY_ALARM_CODE, alarmCode)
+            .build()
+        val workRequest = androidx.work.OneTimeWorkRequestBuilder<ppapps.phapamnhacnho.modules.alarmservice.AlarmWorker>()
+            .setInputData(workData)
+            .build()
+        androidx.work.WorkManager.getInstance(context).enqueue(workRequest)
+
         resultCode = Activity.RESULT_OK
     }
 }

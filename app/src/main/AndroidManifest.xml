@@ -42,7 +42,7 @@
             android:name=".modules.alarmservice.AlarmService"
             android:enabled="true" />
 
-        <receiver android:name=".modules.alarmreceiver.AlarmReceiver" />
+    <receiver android:name=".modules.alarmreceiver.AlarmReceiver" android:exported="true" />
 
     </application>
 
