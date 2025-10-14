@@ -29,7 +29,7 @@ class BootCompletedReceiver : BroadcastReceiver() {
                         )
                         alarmManager.setExactAndAllowWhileIdle(
                             AlarmManager.RTC_WAKEUP,
-                            alarm.time,
+                            if (alarm.nextTime > 0) alarm.nextTime else alarm.time,
                             pendingIntent
                         )
                     }

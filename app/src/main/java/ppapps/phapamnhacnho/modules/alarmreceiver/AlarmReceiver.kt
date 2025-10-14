@@ -16,12 +16,14 @@ class AlarmReceiver : BroadcastReceiver() {
         // Extract alarm code or other data from intent
         val alarmCode = intent.getLongExtra(ppapps.phapamnhacnho.constant.AlarmConstant.KEY_ALARM_CODE, -1)
 
-        // Schedule work with WorkManager
+        // Schedule work with WorkManager with a tag for easier cancellation
         val workData = androidx.work.Data.Builder()
             .putLong(ppapps.phapamnhacnho.constant.AlarmConstant.KEY_ALARM_CODE, alarmCode)
             .build()
         val workRequest = androidx.work.OneTimeWorkRequestBuilder<ppapps.phapamnhacnho.modules.alarmservice.AlarmWorker>()
             .setInputData(workData)
+            .addTag("alarm_work")
+            .addTag("alarm_$alarmCode")
             .build()
         androidx.work.WorkManager.getInstance(context).enqueue(workRequest)
 

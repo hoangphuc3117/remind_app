@@ -419,7 +419,7 @@ class AddEditAlarmActivity : BaseActivity(),
 
         val myIntent = Intent(this, AlarmReceiver::class.java)
         myIntent.putExtra(AlarmConstant.KEY_ALARM_CODE, id)
-        val pendingIntent = PendingIntent.getBroadcast(this, 0, myIntent, 0)
+        val pendingIntent = PendingIntent.getBroadcast(this, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
         alarmManager!!.set(AlarmManager.RTC_WAKEUP, mDateTime, pendingIntent)
         finish()
     }
@@ -464,7 +464,7 @@ class AddEditAlarmActivity : BaseActivity(),
             val pendingIntent = PendingIntent.getBroadcast(
                 applicationContext,
                 mNewAlarm?.code?.toInt() ?: 0,
-                myIntent, PendingIntent.FLAG_CANCEL_CURRENT
+                myIntent, PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
             val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
             alarmManager[AlarmManager.RTC_WAKEUP, mDateTime] = pendingIntent

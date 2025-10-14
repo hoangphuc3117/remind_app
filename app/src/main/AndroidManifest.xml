@@ -43,6 +43,9 @@
             android:enabled="true" />
 
     <receiver android:name=".modules.alarmreceiver.AlarmReceiver" android:exported="true" />
+        
+        <receiver android:name=".modules.alarmservice.AlarmStopReceiver" android:exported="false" />
+        
         <receiver android:name=".modules.boot.BootCompletedReceiver" android:enabled="true" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />

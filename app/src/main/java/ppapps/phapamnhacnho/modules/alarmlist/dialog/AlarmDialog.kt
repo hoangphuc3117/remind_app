@@ -28,8 +28,7 @@ class AlarmDialog : BaseDialog() {
 
     override fun onCreateView(
         inflater: LayoutInflater,
-        @Nullable container: ViewGroup?,
-        @Nullable savedInstanceState: Bundle?
+        container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         binding = DialogAlarmBinding.inflate(inflater)
         val rootView: View = binding.root

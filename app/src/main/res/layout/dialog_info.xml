@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -7,7 +8,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        tools:ignore="UselessParent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -22,7 +24,8 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="30dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/ic_app_round_no_background"/>
+                android:src="@drawable/ic_app_round_no_background"
+                tools:ignore="ContentDescription" />
 
             <TextView
                 android:id="@+id/dialog_tv_title"
@@ -31,18 +34,15 @@
                 android:layout_marginTop="15dp"
                 android:textAlignment="center"
                 android:textSize="@dimen/text_view_title"
-                android:fontFamily="@font/nunito_bold"
                 android:textColor="@color/color_black_opa_87"/>
 
             <TextView
-                android:fontFamily="@font/nunito_regular"
                 android:id="@+id/dialog_tv_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
-                android:textAlignment="center"
                 android:textSize="@dimen/text_view_body"
                 android:textColor="@color/color_black_opa_54"  />
 
@@ -55,7 +55,6 @@
                 android:paddingRight="15dp"
                 android:textAlignment="center"
                 android:textSize="@dimen/text_view_body"
-                android:fontFamily="@font/nunito_regular"
                 android:textColor="@color/color_black_opa_54"  />
 
         </LinearLayout>
@@ -67,16 +66,16 @@
             android:gravity="center"
             android:orientation="horizontal">
 
-            <Button
+            <TextView
                 android:id="@+id/dialog_btn_ok"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
-                android:background="@color/color_blue_500"
+                android:background="@color/cardview_dark_background"
                 android:gravity="center"
                 android:text="@string/dialog_dismiss"
                 android:textAllCaps="true"
                 android:textSize="16sp"
-                android:textColor="@color/color_white"
+                android:textColor="#FFFFFF"
                 android:layout_weight="1"
                 android:paddingStart="@dimen/general_margin_8dp"
                 android:paddingEnd="@dimen/general_margin_8dp"/>

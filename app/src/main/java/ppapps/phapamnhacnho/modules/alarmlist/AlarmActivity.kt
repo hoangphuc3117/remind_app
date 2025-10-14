@@ -2,6 +2,7 @@ package ppapps.phapamnhacnho.modules.alarmlist
 
 import android.app.ActivityManager
 import android.app.AlarmManager
+import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.*
 import android.os.Bundle
@@ -210,9 +211,12 @@ class AlarmActivity : BaseActivity() {
     }
 
     private fun finishAlarm() {
-        val intent = Intent(this, AlarmService::class.java)
-        intent.action = AlarmService.ACTION_STOP
-        startService(intent)
+        // Cancel the notification since we're using WorkManager now
+        val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.cancel(AlarmConstant.ALARM_NOTIFICATION_ID)
+        
+        // Cancel any running WorkManager tasks for this alarm if needed
+        androidx.work.WorkManager.getInstance(this).cancelAllWorkByTag("alarm_work")
     }
 
     private fun cancelAlarm(alarmId: Long) {
@@ -220,7 +224,7 @@ class AlarmActivity : BaseActivity() {
         myIntent.putExtra(AlarmConstant.KEY_ALARM_CODE, alarmId)
         val pendingIntent = PendingIntent.getBroadcast(
             applicationContext,
-            alarmId.toInt(), myIntent, 0
+            alarmId.toInt(), myIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
         val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
         alarmManager.cancel(pendingIntent)
