@@ -55,10 +55,9 @@ class AlarmAdapter(val alarmActivity: AlarmActivity) : RecyclerView.Adapter<Alar
             alarmHolder.binding.llContainer.alpha = 1.0f
         }
 
-        alarmHolder.binding.llContainer.tag = alarmList[position]
-        alarmHolder.binding.llContainer.setOnLongClickListener {
-            alarmActivity.showPopupMenu(it)
-            true
+        // Handle card click - Go directly to detail screen
+        alarmHolder.binding.alarmCard.setOnClickListener {
+            alarmActivity.showDetailAlarmActivity(alarm)
         }
     }
 
@@ -67,9 +66,25 @@ class AlarmAdapter(val alarmActivity: AlarmActivity) : RecyclerView.Adapter<Alar
         return alarmList.size
     }
 
+    fun getAlarmAt(position: Int): AlarmModel {
+        return alarmList[position]
+    }
+
     fun removeAlarm(alarmId: Long) {
         alarmList.removeAlarm(alarmId)
         notifyDataSetChanged()
+    }
+
+    fun removeAlarmAt(position: Int) {
+        if (position >= 0 && position < alarmList.size) {
+            alarmList.removeAt(position)
+            notifyItemRemoved(position)
+        }
+    }
+
+    fun restoreAlarm(alarm: AlarmModel, position: Int) {
+        alarmList.add(position, alarm)
+        notifyItemInserted(position)
     }
 
     class AlarmHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

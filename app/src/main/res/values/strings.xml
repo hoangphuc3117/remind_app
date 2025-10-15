@@ -42,6 +42,25 @@
     <string name="popup_menu_edit">Thay đổi</string>
     <string name="popup_menu_detail">Chi tiết</string>
 
+    <!--Action Buttons-->
+    <string name="action_detail">Chi tiết</string>
+    <string name="action_delete">Xóa</string>
+
+    <!--Settings Screen-->
+    <string name="settings_title">Cài đặt</string>
+    <string name="settings_appearance">Giao diện</string>
+    <string name="settings_dark_mode">Chế độ tối</string>
+    <string name="settings_dark_mode_desc">Bật giao diện tối</string>
+    <string name="settings_language">Ngôn ngữ</string>
+    <string name="settings_language_vietnamese">Tiếng Việt</string>
+    <string name="settings_language_english">English</string>
+    <string name="settings_language_desc_vi">Vietnamese</string>
+    <string name="settings_language_desc_en">Tiếng Anh</string>
+    <string name="settings_developer_info">Thông tin nhà phát triển</string>
+    <string name="settings_developer_name">Hoàng Phúc</string>
+    <string name="settings_developer_role">Android Developer</string>
+    <string name="settings_app_version">Phiên bản 3.0.0</string>
+
     <string-array name="alarm_play_type">
         <item>Từ đầu</item>
         <item>Tiếp tục</item>

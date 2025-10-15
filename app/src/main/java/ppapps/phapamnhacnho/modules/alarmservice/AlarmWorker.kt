@@ -145,11 +145,11 @@ class AlarmWorker(appContext: Context, workerParams: WorkerParameters) : Worker(
             val channel = android.app.NotificationChannel(
                 channelId,
                 "ALARM NOTIFICATIONS",
-                android.app.NotificationManager.IMPORTANCE_HIGH
+                android.app.NotificationManager.IMPORTANCE_LOW // Changed to LOW for silent notification
             )
             channel.description = "This is channel for alarm"
-            channel.enableVibration(true)
-            channel.enableLights(true)
+            channel.enableVibration(false) // Disabled - full screen activity handles this
+            channel.enableLights(false) // Disabled
             channel.setSound(null, null) // We'll handle sound through MediaPlayer
             channel.setShowBadge(true)
             channel.lockscreenVisibility = android.app.Notification.VISIBILITY_PUBLIC
@@ -204,11 +204,10 @@ class AlarmWorker(appContext: Context, workerParams: WorkerParameters) : Worker(
                 "Dismiss",
                 stopPendingIntent
             )
-            .setPriority(androidx.core.app.NotificationCompat.PRIORITY_MAX)
+            .setPriority(androidx.core.app.NotificationCompat.PRIORITY_LOW) // Changed to LOW for silent
             .setCategory(androidx.core.app.NotificationCompat.CATEGORY_ALARM)
             .setVisibility(androidx.core.app.NotificationCompat.VISIBILITY_PUBLIC)
-            .setVibrate(longArrayOf(0, 1000, 500, 1000)) // Vibration pattern
-            .setLights(android.graphics.Color.RED, 3000, 3000) // LED notification
+            .setOnlyAlertOnce(true) // Don't alert multiple times
             .setFullScreenIntent(fullScreenPendingIntent, true) // Show full screen on lock screen
 
         notificationManager.notify(AlarmConstant.ALARM_NOTIFICATION_ID, builder.build())

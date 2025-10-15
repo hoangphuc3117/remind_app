@@ -163,9 +163,13 @@ class AlarmActivity : BaseActivity() {
     }
 
     private fun initEventListener() {
-        // Material 3 toolbar - no need for custom icon listeners
-        // The toolbar is now a MaterialToolbar from the layout
+        // Settings button click
+        binding.btnSettings.setOnClickListener {
+            val intent = Intent(this, ppapps.phapamnhacnho.modules.settings.SettingsActivity::class.java)
+            startActivity(intent)
+        }
 
+        // FAB Add Alarm click
         binding.fabAddAlarm.setOnClickListener {
             val intent = Intent(this, AddEditAlarmActivity::class.java)
             intent.putExtra(AlarmConstant.KEY_ADD_EDIT_DETAIL_ALARM, AddEditAlarmActivity.ADD_ALARM)
@@ -224,6 +228,42 @@ class AlarmActivity : BaseActivity() {
         binding.alarmRlvAlarms.layoutManager = layoutManager
         binding.alarmRlvAlarms.adapter = alarmAdapter
         binding.alarmRlvAlarms.setHasFixedSize(true)
+        
+        // Setup swipe to delete
+        setupSwipeToDelete()
+    }
+    
+    private fun setupSwipeToDelete() {
+        val swipeHandler = object : ppapps.phapamnhacnho.modules.alarmlist.helper.SwipeToDeleteCallback(this) {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val adapter = binding.alarmRlvAlarms.adapter as AlarmAdapter
+                val position = viewHolder.adapterPosition
+                val deletedAlarm = adapter.getAlarmAt(position)
+                
+                // Remove from adapter
+                adapter.removeAlarmAt(position)
+                
+                // Show snackbar with undo
+                com.google.android.material.snackbar.Snackbar.make(
+                    binding.root,
+                    "Đã xóa \"${deletedAlarm.name}\"",
+                    com.google.android.material.snackbar.Snackbar.LENGTH_LONG
+                ).setAction("Hoàn tác") {
+                    // Restore alarm
+                    adapter.restoreAlarm(deletedAlarm, position)
+                }.addCallback(object : com.google.android.material.snackbar.BaseTransientBottomBar.BaseCallback<com.google.android.material.snackbar.Snackbar>() {
+                    override fun onDismissed(transientBottomBar: com.google.android.material.snackbar.Snackbar?, event: Int) {
+                        if (event != DISMISS_EVENT_ACTION) {
+                            // Actually delete from database if not undone
+                            viewModel.deleteAlarm(deletedAlarm.code)
+                            cancelAlarm(deletedAlarm.code)
+                        }
+                    }
+                }).show()
+            }
+        }
+        val itemTouchHelper = androidx.recyclerview.widget.ItemTouchHelper(swipeHandler)
+        itemTouchHelper.attachToRecyclerView(binding.alarmRlvAlarms)
     }
 
     private fun initReceiver() {
@@ -258,46 +298,13 @@ class AlarmActivity : BaseActivity() {
     }
 
     fun showAlarm(alarm: AlarmModel) {
-        //hideLoadingIcon()
+        // Instead of showing dialog, launch full-screen activity
         this.alarm = alarm
         
-        // Check if dialog is already showing, if so dismiss it first
-        if (alarmDialog != null && alarmDialog!!.isAdded) {
-            try {
-                alarmDialog!!.dismissAllowingStateLoss()
-            } catch (e: Exception) {
-                // Ignore if already dismissed
-            }
-            alarmDialog = null
-        }
-        
-        // Create new dialog instance
-        alarmDialog = AlarmDialog()
-        alarmDialog!!.setCallBackListener(object : AlarmDialog.CallBackListener {
-            override fun onDismiss() {
-                finishAlarm()
-            }
-
-            override fun onHide() {
-                viewModel.getAlarms()
-            }
-        })
-        alarmDialog!!.setMessage(alarm.name)
-        alarmDialog!!.setTime(
-            resources.getString(
-                R.string.time_alarm,
-                TimeUtil.formatDateFromTimeStamp(alarm.time)
-            )
-        )
-        
-        // Show dialog safely
-        try {
-            if (!isFinishing && !isDestroyed) {
-                alarmDialog!!.show(supportFragmentManager, "ALARM DIALOG")
-            }
-        } catch (e: Exception) {
-            Log.e("AlarmActivity", "Error showing alarm dialog: ${e.message}", e)
-        }
+        val intent = Intent(this, ppapps.phapamnhacnho.modules.alarmtrigger.AlarmTriggerActivity::class.java)
+        intent.putExtra(AlarmConstant.KEY_ALARM, Gson().toJson(alarm))
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        startActivity(intent)
     }
 
     private fun loadAlarmsOnUI(alarmList: AlarmModelList?) {
@@ -335,13 +342,57 @@ class AlarmActivity : BaseActivity() {
         alarmManager.cancel(pendingIntent)
     }
 
-    private fun showDetailAlarmActivity(alarm: AlarmModel) {
+    // Public method for adapter to call (Option C: Contextual Actions)
+    fun showDetailAlarmActivity(alarm: AlarmModel) {
         val intent = Intent(this, AddEditAlarmActivity::class.java)
         intent.putExtra(AlarmConstant.KEY_ADD_EDIT_DETAIL_ALARM, AddEditAlarmActivity.DETAIL_ALARM)
         intent.putExtra(AlarmConstant.KEY_ALARM, Gson().toJson(alarm))
         startActivity(intent)
     }
 
+    // Public method for showing bottom sheet (Hybrid approach)
+    fun showAlarmBottomSheet(alarm: AlarmModel, alarmNumber: Int) {
+        val bottomSheet = ppapps.phapamnhacnho.modules.alarmlist.dialog.AlarmBottomSheet.newInstance(
+            alarm = alarm,
+            alarmNumber = alarmNumber,
+            onDetail = { alarmModel ->
+                showDetailAlarmActivity(alarmModel)
+            },
+            onDelete = { alarmModel ->
+                showDialogDeleteConfirmation(alarmModel)
+            }
+        )
+        bottomSheet.show(supportFragmentManager, "AlarmBottomSheet")
+    }
+
+    // Public method for adapter to call (Option C: Contextual Actions)
+    fun showDialogDeleteConfirmation(alarm: AlarmModel) {
+        val confirmDialog = ConfirmDialog()
+        confirmDialog.setTitle(getString(R.string.delete_alarm))
+        confirmDialog.setDescription(getString(R.string.delete_alarm_description, alarm.name))
+        confirmDialog.setCallBackListener(object : ConfirmDialog.CallBackListener {
+            override fun onYesClick() {
+                viewModel.deleteAlarm(alarm.code)
+                removeAlarmInRecyclerView(alarm)
+                cancelAlarm(alarm.code)
+                confirmDialog.dismissAllowingStateLoss()
+            }
+
+            override fun onNoClick() {
+                confirmDialog.dismissAllowingStateLoss()
+            }
+        })
+        confirmDialog.show(supportFragmentManager, confirmDialog.javaClass.simpleName)
+    }
+
+    fun removeAlarmInRecyclerView(alarmModel: AlarmModel) {
+        if (binding.alarmRlvAlarms.getAdapter() != null) {
+            (binding.alarmRlvAlarms.getAdapter() as AlarmAdapter).removeAlarm(alarmModel.code)
+        }
+    }
+
+    // Legacy popup menu - kept for backward compatibility if needed
+    // Remove this method once fully migrated to Option C
     fun showPopupMenu(v: View) {
         val alarmModel = v.tag as AlarmModel
         val wrapper: Context = ContextThemeWrapper(this, R.style.popup_menu)
@@ -361,32 +412,7 @@ class AlarmActivity : BaseActivity() {
             }
             false
         }
-        popupMenu.show() // showing popup men
-    }
-
-    fun removeAlarmInRecyclerView(alarmModel: AlarmModel) {
-        if (binding.alarmRlvAlarms.getAdapter() != null) {
-            (binding.alarmRlvAlarms.getAdapter() as AlarmAdapter).removeAlarm(alarmModel.code)
-        }
-    }
-
-    private fun showDialogDeleteConfirmation(alarm: AlarmModel) {
-        val confirmDialog = ConfirmDialog()
-        confirmDialog.setTitle(getString(R.string.delete_alarm))
-        confirmDialog.setDescription(getString(R.string.delete_alarm_description, alarm.name))
-        confirmDialog.setCallBackListener(object : ConfirmDialog.CallBackListener {
-            override fun onYesClick() {
-                viewModel.deleteAlarm(alarm.code)
-                removeAlarmInRecyclerView(alarm)
-                cancelAlarm(alarm.code)
-                confirmDialog.dismissAllowingStateLoss()
-            }
-
-            override fun onNoClick() {
-                confirmDialog.dismissAllowingStateLoss()
-            }
-        })
-        confirmDialog.show(supportFragmentManager, confirmDialog.javaClass.simpleName)
+        popupMenu.show() // showing popup menu
     }
 
     private fun showAppInfo() {

@@ -42,6 +42,22 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan"/>
 
+        <!-- Settings Activity -->
+        <activity
+            android:name=".modules.settings.SettingsActivity"
+            android:screenOrientation="portrait"
+            android:exported="false"/>
+
+        <!-- Alarm Trigger Full Screen Activity -->
+        <activity
+            android:name=".modules.alarmtrigger.AlarmTriggerActivity"
+            android:screenOrientation="portrait"
+            android:showWhenLocked="true"
+            android:turnScreenOn="true"
+            android:excludeFromRecents="true"
+            android:launchMode="singleInstance"
+            android:exported="false"/>
+
         <service
             android:name=".modules.alarmservice.AlarmService"
             android:enabled="true" />
