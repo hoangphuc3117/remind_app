@@ -132,7 +132,14 @@ public class MyPlayer {
     private void playSong(String filePath, int currentPosition) {
         mMediaPlayer.reset();
         try {
-            mMediaPlayer.setDataSource(filePath);
+            // Check if it's a URI (content://) or a file path
+            if (filePath != null && filePath.startsWith("content://")) {
+                // Use URI for SAF (Storage Access Framework)
+                mMediaPlayer.setDataSource(mContext, android.net.Uri.parse(filePath));
+            } else {
+                // Use file path for backward compatibility
+                mMediaPlayer.setDataSource(filePath);
+            }
             mMediaPlayer.prepare();
             mMediaPlayer.start();
             mMediaPlayer.seekTo(currentPosition);

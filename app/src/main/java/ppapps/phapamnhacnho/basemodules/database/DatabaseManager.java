@@ -75,6 +75,7 @@ public class DatabaseManager {
             database = openDatabase();
         }
         try {
+            Log.d("DatabaseManager", "addAlarm: name=" + alarm.getName() + ", time=" + alarm.getTime());
             database.beginTransaction();
             ContentValues contentValues = new ContentValues();
             contentValues.put(SQLConst.ALARM_NAME, alarm.getName());
@@ -91,8 +92,10 @@ public class DatabaseManager {
             contentValues.put(SQLConst.ALARM_LOOP_TYPE, alarm.getLoopType());
             long id = database.insert(SQLConst.TABLE_ALARM, null, contentValues);
             database.setTransactionSuccessful();
+            Log.d("DatabaseManager", "addAlarm: inserted with id=" + id);
             return id;
         } catch (Exception ex) {
+            Log.e("DatabaseManager", "addAlarm error: " + ex.getMessage(), ex);
             return -1;
         } finally {
             database.endTransaction();
@@ -199,6 +202,7 @@ public class DatabaseManager {
             database = openDatabase();
         }
         try {
+            Log.d("DatabaseManager", "updateAlarm: code=" + alarmModel.getCode() + ", name=" + alarmModel.getName());
             database.beginTransaction();
             ContentValues contentValues = new ContentValues();
             contentValues.put(SQLConst.ALARM_NAME, alarmModel.getName());
@@ -216,8 +220,10 @@ public class DatabaseManager {
             int value = database.update(SQLConst.TABLE_ALARM, contentValues, SQLConst.ALARM_CODE + "=?",
                     new String[]{String.valueOf(alarmModel.getCode())});
             database.setTransactionSuccessful();
+            Log.d("DatabaseManager", "updateAlarm: rows updated=" + value);
             return value != 0;
         } catch (Exception ex) {
+            Log.e("DatabaseManager", "updateAlarm error: " + ex.getMessage(), ex);
             return false;
         } finally {
             database.endTransaction();

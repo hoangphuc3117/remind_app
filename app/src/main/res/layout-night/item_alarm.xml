@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Material You 3.0 - Alarm Item Card -->
+<!-- Material You 3.0 - Alarm Item Card (Dark Theme Optimized) -->
 <com.google.android.material.card.MaterialCardView 
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -12,7 +12,7 @@
     android:layout_marginBottom="4dp"
     app:cardCornerRadius="20dp"
     app:cardElevation="0dp"
-    app:cardBackgroundColor="@color/md_theme_light_surfaceContainerHigh"
+    app:cardBackgroundColor="@color/md_theme_dark_surfaceContainerHigh"
     app:strokeWidth="0dp"
     android:foreground="@drawable/bg_alarm_card_ripple_m3"
     android:clickable="true"
@@ -34,7 +34,7 @@
             android:layout_height="48dp"
             app:cardCornerRadius="12dp"
             app:cardElevation="0dp"
-            app:cardBackgroundColor="@color/md_theme_light_secondaryContainer"
+            app:cardBackgroundColor="@color/md_theme_dark_secondaryContainer"
             app:strokeWidth="0dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -47,7 +47,7 @@
                 android:gravity="center"
                 android:text="#"
                 android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
-                android:textColor="@color/md_theme_light_onSecondaryContainer"
+                android:textColor="@color/md_theme_dark_onSecondaryContainer"
                 tools:text="1" />
 
         </com.google.android.material.card.MaterialCardView>
@@ -72,7 +72,7 @@
                 android:maxLines="2"
                 android:text="Alarm Name"
                 android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-                android:textColor="@color/md_theme_light_onSurface"
+                android:textColor="@color/md_theme_dark_onSurface"
                 tools:text="Wake up alarm" />
 
             <TextView
@@ -82,7 +82,7 @@
                 android:layout_marginTop="4dp"
                 android:text="Hoạt động"
                 android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
-                android:textColor="@color/md_theme_light_primary"
+                android:textColor="@color/md_theme_dark_primary"
                 android:visibility="gone"
                 tools:visibility="visible" />
 
@@ -105,7 +105,7 @@
                 android:layout_height="wrap_content"
                 android:text="00:00"
                 android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                android:textColor="@color/md_theme_light_onSurface"
+                android:textColor="@color/md_theme_dark_onSurface"
                 tools:text="07:30" />
 
             <TextView
@@ -115,7 +115,7 @@
                 android:layout_marginTop="2dp"
                 android:text="DD/MM"
                 android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
-                android:textColor="@color/md_theme_light_onSurfaceVariant"
+                android:textColor="@color/md_theme_dark_onSurfaceVariant"
                 tools:text="15/10" />
 
         </LinearLayout>

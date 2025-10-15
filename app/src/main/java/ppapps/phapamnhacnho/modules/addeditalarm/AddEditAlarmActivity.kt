@@ -62,21 +62,65 @@ class AddEditAlarmActivity : BaseActivity(),
     private val fileSelectLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == RESULT_OK) {
             val uri = result.data?.data
-            mEncodedURIMP3 = PathUtil.getPath(this, uri)
-            binding.addAlarmTvChooseFile.text = mEncodedURIMP3
-        } else {
-            binding.addAlarmTvChooseFile.text = getString(R.string.add_alarm_select_file_or_folder)
+            if (uri != null) {
+                // Take persistable URI permission for long-term access
+                try {
+                    contentResolver.takePersistableUriPermission(
+                        uri,
+                        Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    )
+                } catch (e: Exception) {
+                    // Permission may not be available, continue anyway
+                }
+                
+                mEncodedURIMP3 = uri.toString() // Save URI as string
+                // Try to get a readable path for display
+                var displayPath: String? = null
+                try {
+                    displayPath = PathUtil.getPath(this, uri)
+                } catch (e: Exception) {
+                    // PathUtil may fail with certain URI formats, ignore and use fallback
+                    e.printStackTrace()
+                }
+                
+                if (displayPath == null) {
+                    displayPath = uri.lastPathSegment ?: uri.toString()
+                }
+            }
         }
     }
 
     private val folderSelectLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == RESULT_OK) {
             val uri = result.data?.data
-            mEncodedURIMP3 = PathUtil.getPath(this, uri)
-            mEncodedURIMP3 = PathUtil.getFolderPathFromFilePath(mEncodedURIMP3)
-            binding.addAlarmTvChooseFile.text = mEncodedURIMP3
-        } else {
-            binding.addAlarmTvChooseFile.text = getString(R.string.add_alarm_select_file_or_folder)
+            if (uri != null) {
+                // Take persistable URI permission for long-term access
+                try {
+                    contentResolver.takePersistableUriPermission(
+                        uri,
+                        Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    )
+                } catch (e: Exception) {
+                    // Permission may not be available, continue anyway
+                }
+                
+                mEncodedURIMP3 = uri.toString() // Save URI as string
+                // For folder, try to get folder path
+                var displayPath: String? = null
+                try {
+                    displayPath = PathUtil.getPath(this, uri)
+                    if (displayPath != null) {
+                        displayPath = PathUtil.getFolderPathFromFilePath(displayPath)
+                    }
+                } catch (e: Exception) {
+                    // PathUtil may fail with certain URI formats, ignore and use fallback
+                    e.printStackTrace()
+                }
+                
+                if (displayPath == null) {
+                    displayPath = uri.lastPathSegment ?: uri.toString()
+                }
+            }
         }
     }
 
@@ -161,15 +205,12 @@ class AddEditAlarmActivity : BaseActivity(),
 
     private fun disableViews() {
         binding.addAlarmEdtAlarmName.isEnabled = false
-        binding.addAlarmCbFileType.isEnabled = false
         binding.addAlarmEdtLoopTimes.isEnabled = false
         binding.addAlarmEdtTimeAlarm.isEnabled = false
-        binding.addAlarmSpAlarmType.isEnabled = false
         binding.addAlarmSpLoopType.isEnabled = false
         binding.addAlarmTvChooseDate.isEnabled = false
         binding.addAlarmTvChooseDate.isEnabled = false
         binding.addAlarmTvChooseTime.isEnabled = false
-        binding.addAlarmTvChooseFile.isEnabled = false
         binding.addAlarmIcCalendar.isEnabled = false
         binding.addAlarmIcClock.isEnabled = false
         binding.addAlarmBrowseFile.isEnabled = false
@@ -177,15 +218,12 @@ class AddEditAlarmActivity : BaseActivity(),
 
     private fun enableViews() {
         binding.addAlarmEdtAlarmName.isEnabled = true
-        binding.addAlarmCbFileType.isEnabled = true
         binding.addAlarmEdtLoopTimes.isEnabled = true
         binding.addAlarmEdtTimeAlarm.isEnabled = true
-        binding.addAlarmSpAlarmType.isEnabled = true
         binding.addAlarmSpLoopType.isEnabled = true
         binding.addAlarmTvChooseDate.isEnabled = true
         binding.addAlarmTvChooseDate.isEnabled = true
         binding.addAlarmTvChooseTime.isEnabled = true
-        binding.addAlarmTvChooseFile.isEnabled = true
         binding.addAlarmIcCalendar.isEnabled = true
         binding.addAlarmIcClock.isEnabled = true
         binding.addAlarmBrowseFile.isEnabled = true
@@ -195,18 +233,13 @@ class AddEditAlarmActivity : BaseActivity(),
         mOldAlarm =
             Gson().fromJson(intent.getStringExtra(AlarmConstant.KEY_ALARM), AlarmModel::class.java)
         binding.addAlarmEdtAlarmName.setText(mOldAlarm?.name)
-        binding.addAlarmCbFileType.isChecked = mOldAlarm!!.fileType == MyPlayer.PLAY_FOLDER
         binding.addAlarmTvChooseDate.text = TimeUtil.getDateFromTimeStamp(mOldAlarm!!.time)
         binding.addAlarmTvChooseTime.text = TimeUtil.getTimeFromTimeStamp(mOldAlarm!!.time)
-        if (TextUtils.isEmpty(mOldAlarm!!.uriFileFolder)) {
-            binding.addAlarmTvChooseFile.text = getString(R.string.add_alarm_select_file_or_folder)
-        } else {
+        if (!TextUtils.isEmpty(mOldAlarm!!.uriFileFolder)) {
             mEncodedURIMP3 = mOldAlarm!!.uriFileFolder
-            binding.addAlarmTvChooseFile.text = mEncodedURIMP3
         }
         binding.addAlarmSpLoopType.setSelection(mOldAlarm!!.loopType)
         binding.addAlarmEdtLoopTimes.setText(mOldAlarm!!.loopTime.toString())
-        binding.addAlarmSpAlarmType.setSelection(mOldAlarm!!.playType)
         binding.addAlarmEdtTimeAlarm.setText(mOldAlarm!!.timeAlarm.toString())
 
         //Init time
@@ -237,7 +270,6 @@ class AddEditAlarmActivity : BaseActivity(),
             }
         }
 
-        binding.addAlarmCbFileType.setOnCheckedChangeListener(this)
         setupDataForPlayType()
         setupDataForLoopType()
 
@@ -249,16 +281,6 @@ class AddEditAlarmActivity : BaseActivity(),
         binding.addAlarmTvChooseTime.setOnClickListener {
             val tpd = TimePickerDialog(this, this, mHour, mMinute, true)
             tpd.show()
-        }
-
-        binding.addAlarmTvChooseFile.setOnClickListener {
-            if (isStoragePermissionGranted()) {
-                if (mCheckedFile) {
-                    showFileChooser()
-                } else {
-                    showFolderChooser()
-                }
-            }
         }
 
         viewModel.liveDataSetAlarmResult.observe(this, {
@@ -273,7 +295,6 @@ class AddEditAlarmActivity : BaseActivity(),
     private fun setupDataForPlayType() {
         val playTypes = resources.getStringArray(R.array.alarm_play_type)
         val playTypeAdapter = PlayTypeAdapter(this, playTypes)
-        binding.addAlarmSpAlarmType.adapter = playTypeAdapter
     }
 
     private fun setupDataForLoopType() {
@@ -321,29 +342,25 @@ class AddEditAlarmActivity : BaseActivity(),
         @NonNull permissions: Array<String>,
         @NonNull grantResults: IntArray
     ) {
-        when (requestCode) {
-            REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE -> {
-                val grantedWriteExternalStorage =
-                    grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED
-                if (grantedWriteExternalStorage) {
-                    if (mCheckedFile) {
-                        showFileChooser()
-                    } else {
-                        showFolderChooser()
-                    }
-                } else {
-                    Log.d(this.localClassName, "Permission: denied request external storage")
-                }
-            }
-            else -> super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        // Storage permission handling removed - using SAF instead
     }
 
     private fun addNewAlarm() {
+        Log.d("AddAlarm", "addNewAlarm called")
         val alarm = AlarmModel()
         val date = TimeUtil.formatDate(mDay.toString(), (mMonth + 1).toString(), mYear.toString())
         val time = TimeUtil.formatTime(mHour.toString(), mMinute.toString())
         mDateTime = TimeUtil.convertDateTimeToTimeStamp(date, time)
+        
+        Log.d("AddAlarm", "Before compareTime: mDateTime=$mDateTime (${java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(java.util.Date(mDateTime))})")
+        
+        // Compare with current time to avoid setting alarm in the past
+        mDateTime = compareTimeWithCurrentTime(mDateTime)
+        
+        Log.d("AddAlarm", "After compareTime: mDateTime=$mDateTime (${java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(java.util.Date(mDateTime))})")
+        Log.d("AddAlarm", "Current time: ${System.currentTimeMillis()} (${java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(java.util.Date(System.currentTimeMillis()))})")
+        
         alarm.time = mDateTime
         alarm.name = binding.addAlarmEdtAlarmName.text.toString()
         alarm.status = AlarmModel.STATUS_IN_PROGRESS
@@ -365,11 +382,10 @@ class AddEditAlarmActivity : BaseActivity(),
         }
         alarm.loopTime = loopTimes
         alarm.countLoopTimes = 1
-        val playType: Int = binding.addAlarmSpAlarmType.selectedItemPosition
-        alarm.playType = playType
         val loopType: Int = binding.addAlarmSpLoopType.selectedItemPosition
         alarm.loopType = loopType
 
+        Log.d("AddAlarm", "Created alarm: name=${alarm.name}, time=${alarm.time}, uri=${alarm.uriFileFolder}")
         viewModel.addAlarm(alarm)
     }
 
@@ -400,11 +416,14 @@ class AddEditAlarmActivity : BaseActivity(),
         }
         mNewAlarm?.loopTime = loopTimes
         mNewAlarm?.countLoopTimes = 1
-        val playType: Int = binding.addAlarmSpAlarmType.selectedItemPosition
-        mNewAlarm?.playType = playType
         val loopType: Int = binding.addAlarmSpLoopType.selectedItemPosition
         mNewAlarm?.loopType = loopType
+        
+        // Preserve fields from old alarm that are not editable in UI
+        mNewAlarm?.fileIndex = mOldAlarm?.fileIndex ?: 0
+        mNewAlarm?.playingPosition = mOldAlarm?.playingPosition ?: 0
 
+        Log.d("EditAlarm", "Updating alarm: code=${mNewAlarm?.code}, name=${mNewAlarm?.name}, time=${mNewAlarm?.time}, uri=${mNewAlarm?.uriFileFolder}")
         viewModel.updateAlarm(mNewAlarm)
     }
 
@@ -413,52 +432,142 @@ class AddEditAlarmActivity : BaseActivity(),
     }
 
     private fun setAlarm(id: Long) {
+        Log.d("AddAlarm", "setAlarm called with id=$id")
+        
+        if (id <= 0) {
+            Log.e("AddAlarm", "Invalid alarm ID: $id")
+            Toast.makeText(this, "Failed to create alarm", Toast.LENGTH_SHORT).show()
+            finish()
+            return
+        }
+        
         if (alarmManager == null) {
             alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
         }
 
+        // Check if we can schedule exact alarms on Android 12+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+            if (!alarmManager!!.canScheduleExactAlarms()) {
+                // Request user to grant permission
+                Log.w("AddAlarm", "Cannot schedule exact alarms, requesting permission")
+                Toast.makeText(this, "Please grant 'Alarms & reminders' permission", Toast.LENGTH_LONG).show()
+                val intent = android.content.Intent(android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
+                startActivity(intent)
+                finish()
+                return
+            }
+        }
+
+        Log.d("AddAlarm", "Setting new alarm: id=$id, time=$mDateTime (${java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(java.util.Date(mDateTime))})")
+        
+        // Check if alarm time is in the future
+        val currentTime = System.currentTimeMillis()
+        if (mDateTime <= currentTime) {
+            Log.w("AddAlarm", "Alarm time is in the past or current! alarm=$mDateTime, current=$currentTime")
+            // Still schedule it, but it may trigger immediately
+        } else {
+            val diff = mDateTime - currentTime
+            val minutes = diff / 60000
+            Log.d("AddAlarm", "Alarm will trigger in $minutes minutes")
+        }
+        
         val myIntent = Intent(this, AlarmReceiver::class.java)
         myIntent.putExtra(AlarmConstant.KEY_ALARM_CODE, id)
-        val pendingIntent = PendingIntent.getBroadcast(this, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
-        alarmManager!!.set(AlarmManager.RTC_WAKEUP, mDateTime, pendingIntent)
+        // IMPORTANT: Use unique requestCode (alarm id) for each alarm
+        val pendingIntent = PendingIntent.getBroadcast(
+            this, 
+            id.toInt(), 
+            myIntent, 
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+        
+        try {
+            alarmManager!!.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, mDateTime, pendingIntent)
+            Log.d("AddAlarm", "✓ Alarm scheduled successfully via AlarmManager")
+            Toast.makeText(this, "Alarm set successfully", Toast.LENGTH_SHORT).show()
+        } catch (e: SecurityException) {
+            Log.e("AddAlarm", "SecurityException: Cannot schedule alarm - ${e.message}", e)
+            Toast.makeText(this, "Permission denied: ${e.message}", Toast.LENGTH_LONG).show()
+        } catch (e: Exception) {
+            Log.e("AddAlarm", "Failed to schedule alarm: ${e.message}", e)
+            Toast.makeText(this, "Failed to set alarm: ${e.message}", Toast.LENGTH_LONG).show()
+        }
+        
         finish()
     }
 
     private fun showFileChooser() {
-        val intent = Intent(Intent.ACTION_GET_CONTENT)
-        intent.type = "audio/mpeg"
-        intent.addCategory(Intent.CATEGORY_OPENABLE)
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "audio/*"
+            // Allow multiple MIME types for better compatibility
+            putExtra(Intent.EXTRA_MIME_TYPES, arrayOf("audio/mpeg", "audio/mp3", "audio/*"))
+        }
         try {
-            fileSelectLauncher.launch(Intent.createChooser(intent, "Select a File"))
+            fileSelectLauncher.launch(intent)
         } catch (ex: ActivityNotFoundException) {
-            // Potentially direct the user to the Market with a Dialog
-            Toast.makeText(
-                this, "Please install a File Manager.",
-                Toast.LENGTH_SHORT
-            ).show()
+            // Fallback to older method
+            val fallbackIntent = Intent(Intent.ACTION_GET_CONTENT).apply {
+                type = "audio/*"
+                addCategory(Intent.CATEGORY_OPENABLE)
+            }
+            try {
+                fileSelectLauncher.launch(Intent.createChooser(fallbackIntent, "Select an Audio File"))
+            } catch (e: ActivityNotFoundException) {
+                Toast.makeText(
+                    this, "Please install a File Manager.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
     }
 
     private fun showFolderChooser() {
-        val intent = Intent(Intent.ACTION_GET_CONTENT)
-        intent.type = "file/*"
-        intent.addCategory(Intent.CATEGORY_OPENABLE)
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE).apply {
+            // For folder selection, use OPEN_DOCUMENT_TREE
+        }
         try {
-            folderSelectLauncher.launch(Intent.createChooser(intent, "Select a File"))
+            folderSelectLauncher.launch(intent)
         } catch (ex: ActivityNotFoundException) {
-            // Potentially direct the user to the Market with a Dialog
-            Toast.makeText(
-                this, "Please install a File Manager.",
-                Toast.LENGTH_SHORT
-            ).show()
+            // Fallback to file picker for older devices
+            val fallbackIntent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+                addCategory(Intent.CATEGORY_OPENABLE)
+                type = "audio/*"
+                putExtra(Intent.EXTRA_MIME_TYPES, arrayOf("audio/mpeg", "audio/mp3", "audio/*"))
+            }
+            try {
+                folderSelectLauncher.launch(fallbackIntent)
+            } catch (e: ActivityNotFoundException) {
+                Toast.makeText(
+                    this, "Please install a File Manager.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
     }
 
     fun handleAfterUpdatingAlarm(updateAlarm: Boolean) {
+        Log.d("EditAlarm", "handleAfterUpdatingAlarm called: updateAlarm=$updateAlarm, mNewAlarm=${mNewAlarm?.code}")
         if (mNewAlarm == null) {
+            Log.e("EditAlarm", "mNewAlarm is null, cannot update alarm")
             return
         }
         if (updateAlarm) {
+            val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
+            
+            // Check if we can schedule exact alarms on Android 12+
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                if (!alarmManager.canScheduleExactAlarms()) {
+                    // Request user to grant permission
+                    Log.w("EditAlarm", "Cannot schedule exact alarms, requesting permission")
+                    val intent = android.content.Intent(android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
+                    startActivity(intent)
+                    finish()
+                    return
+                }
+            }
+            
+            Log.d("EditAlarm", "Setting alarm via AlarmManager: code=${mNewAlarm?.code}, time=$mDateTime")
             val myIntent = Intent(this, AlarmReceiver::class.java)
             myIntent.putExtra(AlarmConstant.KEY_ALARM_CODE, mNewAlarm?.code)
             val pendingIntent = PendingIntent.getBroadcast(
@@ -466,8 +575,14 @@ class AddEditAlarmActivity : BaseActivity(),
                 mNewAlarm?.code?.toInt() ?: 0,
                 myIntent, PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
-            val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
-            alarmManager[AlarmManager.RTC_WAKEUP, mDateTime] = pendingIntent
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, mDateTime, pendingIntent)
+            Log.d("EditAlarm", "Alarm scheduled successfully")
+            
+            // Optional: Send broadcast to refresh AlarmActivity list
+            // val refreshIntent = Intent("ppapps.phapamnhacnho.refreshalarms")
+            // sendBroadcast(refreshIntent)
+        } else {
+            Log.e("EditAlarm", "Update alarm failed, updateAlarm=$updateAlarm")
         }
         finish()
     }
@@ -498,7 +613,9 @@ class AddEditAlarmActivity : BaseActivity(),
 
     private fun compareTimeWithCurrentTime(timeStamp: Long): Long {
         return if (TimeUtil.isTimeBeforeCurrentTime(timeStamp)) {
-            TimeUtil.getCurrentDateTimeStamp()
+            // If the alarm time is in the past, schedule it for the next occurrence
+            // by adding 1 day (24 hours * 60 minutes * 60 seconds * 1000 milliseconds)
+            timeStamp + (24 * 60 * 60 * 1000)
         } else {
             timeStamp
         }

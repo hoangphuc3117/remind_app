@@ -1,85 +1,140 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- Material You 3.0 - Alarm Popup Dialog -->
+<androidx.constraintlayout.widget.ConstraintLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/md_theme_light_background">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <!-- Main Card Container -->
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:orientation="vertical"
-        tools:ignore="UselessParent">
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        app:cardCornerRadius="28dp"
+        app:cardElevation="8dp"
+        app:cardBackgroundColor="@color/md_theme_light_surface"
+        app:strokeWidth="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="32dp">
 
-            <ImageView
-                android:id="@+id/logo"
-                android:layout_width="@dimen/width_percent_30"
-                android:layout_height="@dimen/width_percent_30"
+            <!-- Icon Badge -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="30dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_app_round_no_background"
-                tools:ignore="ContentDescription" />
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="@color/md_theme_light_primaryContainer"
+                app:strokeWidth="0dp">
 
+                <ImageView
+                    android:id="@+id/logo"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="center"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_app_round_no_background"
+                    android:tint="@color/md_theme_light_onPrimaryContainer"
+                    tools:ignore="ContentDescription" />
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Title -->
             <TextView
                 android:id="@+id/dialog_tv_title"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="24dp"
                 android:textAlignment="center"
-                android:textColor="@color/color_black_opa_87"
-                android:textSize="@dimen/text_view_title" />
+                android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
+                android:textColor="@color/md_theme_light_onSurface"
+                android:gravity="center"
+                tools:text="Alarm Name" />
 
+            <!-- Time -->
             <TextView
                 android:id="@+id/dialog_tv_time"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="8dp"
                 android:textAlignment="center"
-                android:textColor="@color/color_black_opa_54"
-                android:textSize="@dimen/text_view_body" />
+                android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                android:textColor="@color/md_theme_light_onSurfaceVariant"
+                android:gravity="center"
+                tools:text="08:00 AM" />
+
+            <!-- Pulsing Animation Indicator (optional) -->
+            <View
+                android:layout_width="48dp"
+                android:layout_height="4dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="16dp"
+                android:background="@color/md_theme_light_primary"
+                android:alpha="0.8" />
+
+            <!-- Action Buttons -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <!-- Hide Button -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/dialog_btn_hide"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:text="@string/dialog_hide"
+                    android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    app:cornerRadius="16dp"
+                    app:strokeColor="@color/md_theme_light_outline"
+                    app:strokeWidth="1dp" />
+
+                <!-- Dismiss Button -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/dialog_btn_ok"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:text="@string/dialog_dismiss"
+                    android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
+                    style="@style/Widget.Material3.Button"
+                    app:cornerRadius="16dp"
+                    app:backgroundTint="@color/md_theme_light_primaryContainer" />
+
+            </LinearLayout>
+
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:gravity="center"
-            android:orientation="horizontal">
+    </com.google.android.material.card.MaterialCardView>
 
-            <TextView
-                android:id="@+id/dialog_btn_hide"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:background="@drawable/border_button"
-                android:gravity="center"
-                android:paddingStart="@dimen/general_margin_8dp"
-                android:paddingEnd="@dimen/general_margin_8dp"
-                android:text="@string/dialog_hide"
-                android:textAllCaps="true"
-                android:textColor="@color/color_black_opa_87"
-                android:textSize="16sp" />
+    <!-- Background Blur Effect (optional - decorative) -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#99000000"
+        android:clickable="false"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:elevation="-1dp" />
 
-            <TextView
-                android:id="@+id/dialog_btn_ok"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:background="@color/color_blue_500"
-                android:gravity="center"
-                android:paddingStart="@dimen/general_margin_8dp"
-                android:paddingEnd="@dimen/general_margin_8dp"
-                android:text="@string/dialog_dismiss"
-                android:textAllCaps="true"
-                android:textColor="@color/color_white"
-                android:textSize="16sp" />
-        </LinearLayout>
-    </LinearLayout>
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

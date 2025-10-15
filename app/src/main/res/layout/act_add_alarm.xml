@@ -1,368 +1,323 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- Material You 3.0 - Add/Edit Alarm Screen -->
+<androidx.coordinatorlayout.widget.CoordinatorLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:background="@color/md_theme_light_background">
 
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/layout_toolbar" />
+    <!-- App Bar -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/md_theme_light_surface"
+        android:elevation="0dp">
 
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/layout_toolbar" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- Main Content -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:fillViewport="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
 
-            <LinearLayout
+            <!-- Alarm Name Card -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/general_margin"
-                android:layout_marginTop="@dimen/general_margin_4dp"
-                android:layout_marginEnd="@dimen/general_margin"
-                android:layout_marginBottom="@dimen/general_margin_8dp"
-                android:orientation="vertical">
-
-                <EditText
-                    android:id="@+id/add_alarm_edt_alarm_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/general_margin"
-                    android:layout_marginTop="@dimen/general_margin_4dp"
-                    android:layout_marginEnd="@dimen/general_margin"
-                    android:hint="@string/add_alarm_input_name"
-                    android:textColor="@color/color_black_opa_87"
-                    android:textColorHint="@color/color_black_opa_38"
-                    android:textSize="@dimen/text_view_caption" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="start"
-                    android:text="@string/alarm_name"
-                    android:textColor="@color/color_black_opa_87"
-                    android:textSize="@dimen/text_view_sub_title" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/general_margin"
-                android:layout_marginTop="@dimen/general_margin_8dp"
-                android:layout_marginEnd="@dimen/general_margin"
-                android:layout_marginBottom="@dimen/general_margin_8dp"
-                android:orientation="vertical">
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="@color/md_theme_light_surfaceContainerHigh"
+                app:strokeWidth="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/general_margin"
-                    android:layout_marginTop="@dimen/general_margin_4dp"
-                    android:layout_marginEnd="@dimen/general_margin"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:id="@+id/add_alarm_ic_calendar"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginEnd="@dimen/general_margin_8dp"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/ic_calendar_48" />
+                    android:orientation="vertical"
+                    android:padding="20dp">
 
                     <TextView
-                        android:id="@+id/add_alarm_tv_choose_date"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginEnd="@dimen/general_margin_8dp"
-                        android:text="10/03/2017"
-                        android:textColor="@color/color_black_opa_87"
-                        android:textSize="@dimen/text_view_body" />
-                </LinearLayout>
+                        android:text="@string/alarm_name"
+                        android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
+                        android:textColor="@color/md_theme_light_onSurfaceVariant"
+                        android:layout_marginBottom="8dp" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/general_margin"
-                    android:layout_marginTop="@dimen/general_margin_4dp"
-                    android:layout_marginEnd="@dimen/general_margin"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:id="@+id/add_alarm_ic_clock"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginEnd="@dimen/general_margin_8dp"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/ic_clock_48" />
-
-                    <TextView
-                        android:id="@+id/add_alarm_tv_choose_time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:text="08:00"
-                        android:textColor="@color/color_black_opa_87"
-                        android:textSize="@dimen/text_view_body" />
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="start"
-                    android:text="@string/alarm_time"
-                    android:textColor="@color/color_black_opa_87"
-                    android:textSize="@dimen/text_view_sub_title" />
-
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/general_margin"
-                android:layout_marginTop="@dimen/general_margin_8dp"
-                android:layout_marginEnd="@dimen/general_margin"
-                android:layout_marginBottom="@dimen/general_margin_8dp"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/general_margin"
-                    android:layout_marginEnd="@dimen/general_margin"
-                    android:gravity="start"
-                    android:orientation="vertical">
-
-                    <CheckBox
-                        android:id="@+id/add_alarm_cb_file_type"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginTop="@dimen/general_margin_4dp"
-                        android:gravity="center_vertical"
-                        android:text="@string/add_alarm_folder"
-                        android:textColor="@color/color_black_opa_87" />
-
-                    <LinearLayout
+                    <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginTop="@dimen/general_margin_4dp"
-                        android:orientation="horizontal">
+                        android:layout_height="wrap_content"
+                        style="@style/Widget.Material3.TextInputLayout.FilledBox"
+                        app:boxBackgroundColor="@color/md_theme_light_surfaceContainer"
+                        app:boxStrokeWidth="0dp"
+                        app:boxStrokeWidthFocused="2dp"
+                        app:boxCornerRadiusTopStart="12dp"
+                        app:boxCornerRadiusTopEnd="12dp"
+                        app:boxCornerRadiusBottomStart="12dp"
+                        app:boxCornerRadiusBottomEnd="12dp"
+                        app:hintEnabled="false">
 
-                        <ImageView
-                            android:id="@+id/add_alarm_browse_file"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:layout_marginEnd="@dimen/general_margin_8dp"
-                            android:scaleType="fitCenter"
-                            android:src="@drawable/ic_music_folder_50" />
-
-                        <TextView
-                            android:id="@+id/add_alarm_tv_choose_file"
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/add_alarm_edt_alarm_name"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:ellipsize="end"
-                            android:gravity="center_vertical|start"
-                            android:maxLines="3"
-                            android:text="@string/add_alarm_select_file_or_folder"
-                            android:textColor="@color/color_black_opa_87"
-                            android:textSize="@dimen/text_view_body" />
+                            android:hint="@string/add_alarm_input_name"
+                            android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                            android:textColor="@color/md_theme_light_onSurface"
+                            android:inputType="text"
+                            android:maxLines="1" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Date & Time Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="@color/md_theme_light_surfaceContainerHigh"
+                app:strokeWidth="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/alarm_time"
+                        android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
+                        android:textColor="@color/md_theme_light_onSurfaceVariant"
+                        android:layout_marginBottom="12dp" />
+
+                    <!-- Date Picker -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:background="?attr/selectableItemBackground"
+                        android:layout_marginBottom="12dp">
+
+                        <ImageView
+                            android:id="@+id/add_alarm_ic_calendar"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_calendar_48"
+                            android:layout_marginEnd="16dp" />
+
+                        <TextView
+                            android:id="@+id/add_alarm_tv_choose_date"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="10/03/2017"
+                            android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                            android:textColor="@color/md_theme_light_onSurface" />
+
                     </LinearLayout>
+
+                    <!-- Time Picker -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:background="?attr/selectableItemBackground">
+
+                        <ImageView
+                            android:id="@+id/add_alarm_ic_clock"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_clock_48"
+                            android:layout_marginEnd="16dp" />
+
+                        <TextView
+                            android:id="@+id/add_alarm_tv_choose_time"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="08:00"
+                            android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                            android:textColor="@color/md_theme_light_onSurface" />
+
+                    </LinearLayout>
+
                 </LinearLayout>
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="start"
-                    android:text="@string/add_alarm_file"
-                    android:textColor="@color/color_black_opa_87"
-                    android:textSize="@dimen/text_view_sub_title" />
-            </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
-            <LinearLayout
+            <!-- File Selection Card -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/general_margin"
-                android:layout_marginTop="@dimen/general_margin_8dp"
-                android:layout_marginEnd="@dimen/general_margin"
-                android:layout_marginBottom="@dimen/general_margin_8dp"
-                android:orientation="vertical">
-
-                <Spinner
-                    android:id="@+id/add_alarm_sp_alarm_type"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginBottom="@dimen/general_margin_4dp"
-                    android:gravity="start"
-                    android:popupBackground="@color/color_white"
-                    android:textColor="@color/color_black_opa_87"
-                    android:textSize="16sp" />
-
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="start"
-                    android:text="@string/add_alarm_play_type"
-                    android:textColor="@color/color_black_opa_87"
-                    android:textSize="@dimen/text_view_sub_title" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/general_margin"
-                android:layout_marginTop="@dimen/general_margin_8dp"
-                android:layout_marginEnd="@dimen/general_margin"
-                android:layout_marginBottom="@dimen/general_margin_8dp"
-                android:orientation="vertical">
-
-                <Spinner
-                    android:id="@+id/add_alarm_sp_loop_type"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginTop="@dimen/general_margin_4dp"
-                    android:gravity="start"
-                    android:popupBackground="@color/color_white"
-                    android:textColor="@color/color_black_opa_87"
-                    android:textSize="16sp" />
-
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="start"
-                    android:text="@string/add_alarm_loop"
-                    android:textColor="@color/color_black_opa_87"
-                    android:textSize="@dimen/text_view_sub_title" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/general_margin"
-                android:layout_marginTop="@dimen/general_margin_8dp"
-                android:layout_marginEnd="@dimen/general_margin"
-                android:layout_marginBottom="@dimen/general_margin_8dp"
-                android:orientation="vertical">
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="@color/md_theme_light_surfaceContainerHigh"
+                app:strokeWidth="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/general_margin"
-                    android:layout_marginEnd="@dimen/general_margin"
-                    android:gravity="start">
-
-                    <EditText
-                        android:id="@+id/add_alarm_edt_time_alarm"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginEnd="@dimen/general_margin"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical"
-                        android:hint="@string/add_alarm_input_play_time"
-                        android:inputType="number"
-                        android:maxLines="1"
-                        android:textColor="@color/color_black_opa_87"
-                        android:textColorHint="@color/color_black_opa_38"
-                        android:textSize="@dimen/text_view_body" />
+                    android:orientation="vertical"
+                    android:padding="20dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:text="@string/add_alarm_second"
-                        android:textColor="@color/color_black_opa_87"
-                        android:textSize="@dimen/text_view_body" />
+                        android:text="Âm thanh"
+                        android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
+                        android:textColor="@color/md_theme_light_onSurfaceVariant"
+                        android:layout_marginBottom="12dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/add_alarm_browse_file"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Chọn tệp"
+                        style="@style/Widget.Material3.Button.TonalButton"
+                        app:cornerRadius="12dp"
+                        android:layout_marginBottom="8dp" />
+
                 </LinearLayout>
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="start"
-                    android:text="@string/add_alarm_play_time"
-                    android:textColor="@color/color_black_opa_87"
-                    android:textSize="@dimen/text_view_sub_title" />
-            </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
-            <LinearLayout
+            <!-- Settings Card -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/general_margin"
-                android:layout_marginTop="@dimen/general_margin_8dp"
-                android:layout_marginEnd="@dimen/general_margin"
-                android:layout_marginBottom="@dimen/general_margin_8dp"
-                android:orientation="vertical">
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="@color/md_theme_light_surfaceContainerHigh"
+                app:strokeWidth="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/general_margin"
-                    android:layout_marginTop="@dimen/general_margin_4dp"
-                    android:layout_marginEnd="@dimen/general_margin"
-                    android:gravity="start"
-                    android:orientation="horizontal">
-
-                    <EditText
-                        android:id="@+id/add_alarm_edt_loop_times"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginEnd="@dimen/general_margin"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical"
-                        android:hint="@string/add_alarm_input_loop_times"
-                        android:inputType="number"
-                        android:maxLines="1"
-                        android:textColor="@color/color_black_opa_87"
-                        android:textSize="@dimen/text_view_body" />
+                    android:orientation="vertical"
+                    android:padding="20dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:text="@string/add_alarm_times"
-                        android:textColor="@color/color_black_opa_87"
-                        android:textSize="@dimen/text_view_body" />
+                        android:text="Cài đặt"
+                        android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
+                        android:textColor="@color/md_theme_light_onSurfaceVariant"
+                        android:layout_marginBottom="12dp" />
+
+                    <!-- Loop Type -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/add_alarm_loop"
+                        android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                        android:textColor="@color/md_theme_light_onSurfaceVariant"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="4dp" />
+
+                    <Spinner
+                        android:id="@+id/add_alarm_sp_loop_type"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:background="@color/md_theme_light_surfaceContainer"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp"
+                        android:layout_marginBottom="12dp" />
+
+                    <!-- Loop Times -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/add_alarm_loop_times"
+                        android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                        android:textColor="@color/md_theme_light_onSurfaceVariant"
+                        android:layout_marginBottom="4dp" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/Widget.Material3.TextInputLayout.FilledBox"
+                        app:boxBackgroundColor="@color/md_theme_light_surfaceContainer"
+                        app:boxStrokeWidth="0dp"
+                        app:boxCornerRadiusTopStart="12dp"
+                        app:boxCornerRadiusTopEnd="12dp"
+                        app:boxCornerRadiusBottomStart="12dp"
+                        app:boxCornerRadiusBottomEnd="12dp"
+                        app:hintEnabled="false"
+                        android:layout_marginBottom="12dp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/add_alarm_edt_loop_times"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Số lần lặp"
+                            android:inputType="number"
+                            android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Alarm Duration -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/add_alarm_play_time"
+                        android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                        android:textColor="@color/md_theme_light_onSurfaceVariant"
+                        android:layout_marginBottom="4dp" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/Widget.Material3.TextInputLayout.FilledBox"
+                        app:boxBackgroundColor="@color/md_theme_light_surfaceContainer"
+                        app:boxStrokeWidth="0dp"
+                        app:boxCornerRadiusTopStart="12dp"
+                        app:boxCornerRadiusTopEnd="12dp"
+                        app:boxCornerRadiusBottomStart="12dp"
+                        app:boxCornerRadiusBottomEnd="12dp"
+                        app:hintEnabled="false"
+                        app:suffixText="giây">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/add_alarm_edt_time_alarm"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Thời lượng báo thức"
+                            android:inputType="number"
+                            android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
                 </LinearLayout>
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="start"
-                    android:text="@string/add_alarm_loop_times"
-                    android:textColor="@color/color_black_opa_87"
-                    android:textSize="@dimen/text_view_sub_title" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/general_margin"
-                android:layout_marginEnd="@dimen/general_margin"
-                android:orientation="horizontal"
-                android:visibility="gone">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/add_alarm_calendar_type"
-                    android:textSize="@dimen/text_view_body" />
-            </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
+
     </androidx.core.widget.NestedScrollView>
 
-    <include layout="@layout/layout_toolbar" />
-</LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

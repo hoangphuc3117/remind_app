@@ -31,25 +31,28 @@ class AlarmAdapter(val alarmActivity: AlarmActivity) : RecyclerView.Adapter<Alar
 
     override fun onBindViewHolder(alarmHolder: AlarmHolder, position: Int) {
         val alarm: AlarmModel = alarmList[position]
+        
+        // Set alarm name
         alarmHolder.binding.tvItemName.text = alarm.name
-        alarmHolder.binding.tvItemTime.text = TimeUtil.getDateTimeFromTimeStamp(alarm.time)
+        
+        // Set time only (HH:mm format)
+        alarmHolder.binding.tvItemTime.text = TimeUtil.getTimeFromTimeStamp(alarm.time)
+        
+        // Set date separately (dd/MM format)
+        alarmHolder.binding.tvItemDate.text = TimeUtil.getDateFromTimeStamp(alarm.time)
+        
+        // Set alarm number
         alarmHolder.binding.tvItemNumber.text = (position + 1).toString()
+        
+        // Set status text and visibility
         if (AlarmModel.STATUS_DONE == alarm.status) {
-            alarmHolder.binding.llContainer.setBackgroundColor(
-                ResourcesCompat.getColor(
-                    alarmHolder.binding.tvItemNumber.resources,
-                    R.color.color_grey_400,
-                    null
-                )
-            )
+            alarmHolder.binding.tvItemStatus.visibility = View.GONE
+            // Use a subtle color tint for completed alarms
+            alarmHolder.binding.llContainer.alpha = 0.6f
         } else {
-            alarmHolder.binding.llContainer.setBackgroundColor(
-                ResourcesCompat.getColor(
-                    alarmHolder.binding.llContainer.resources,
-                    R.color.color_white,
-                    null
-                )
-            )
+            alarmHolder.binding.tvItemStatus.visibility = View.VISIBLE
+            alarmHolder.binding.tvItemStatus.text = "Hoạt động"
+            alarmHolder.binding.llContainer.alpha = 1.0f
         }
 
         alarmHolder.binding.llContainer.tag = alarmList[position]

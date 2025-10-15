@@ -1,14 +1,21 @@
 package ppapps.phapamnhacnho.modules.alarmlist
 
+import android.Manifest
 import android.app.ActivityManager
 import android.app.AlarmManager
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.*
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.ContextThemeWrapper
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.PopupMenu
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -38,6 +45,24 @@ class AlarmActivity : BaseActivity() {
         const val BROADCAST_STRING_CLOSE_DIALOG = "ppapps.phapamnhacnho.closedialog"
         const val BROADCAST_STRING_REFRESH_ALARMS = "ppapps.phapamnhacnho.refreshalarms"
         const val BROADCAST_STRING_SHOW_ALARM_POPUP = "ppapps.phapamnhacnho.showalarmpopup"
+        private const val TAG = "AlarmActivity"
+    }
+    
+    // Notification permission launcher
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            Log.d(TAG, "Notification permission granted")
+        } else {
+            Log.w(TAG, "Notification permission denied")
+            // Show explanation to user
+            val dialog = InfoDialog()
+            dialog.setMessage(getString(R.string.app_name))
+            dialog.setDescription("Bạn cần cấp quyền thông báo để nhận nhắc nhở khi app đóng. " +
+                "Vui lòng bật trong Settings > Apps > ${getString(R.string.app_name)} > Notifications")
+            dialog.show(supportFragmentManager, "notification_permission")
+        }
     }
 
     private lateinit var binding: ActAlarmBinding
@@ -60,13 +85,74 @@ class AlarmActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        
+        // Enable showing on lock screen for alarm notifications (Android 8.1+)
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O_MR1) {
+            setShowWhenLocked(true)
+            setTurnScreenOn(true)
+        } else {
+            // For older Android versions
+            window.addFlags(
+                android.view.WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
+                        or android.view.WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
+                        or android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+            )
+        }
+        
         binding = ActAlarmBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
         viewModel = ViewModelProvider(this).get(AlarmViewModel::class.java)
 
+        // Request notification permission for Android 13+
+        requestNotificationPermission()
+
         initView()
         initData()
+        
+        // Handle alarm popup intent if launched from AlarmWorker
+        handleAlarmIntent(intent)
+    }
+    
+    private fun requestNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            when {
+                ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) == PackageManager.PERMISSION_GRANTED -> {
+                    Log.d(TAG, "Notification permission already granted")
+                }
+                shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS) -> {
+                    // Show explanation to user
+                    val dialog = InfoDialog()
+                    dialog.setMessage(getString(R.string.app_name))
+                    dialog.setDescription("App cần quyền thông báo để gửi nhắc nhở khi app đóng. Vui lòng cho phép.")
+                    dialog.show(supportFragmentManager, "notification_permission_rationale")
+                    requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                }
+                else -> {
+                    // Directly request permission
+                    requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                }
+            }
+        }
+        
+        // Also check if notifications are enabled at app level
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        if (!notificationManager.areNotificationsEnabled()) {
+            Log.w(TAG, "Notifications are disabled at system level for this app")
+        }
+    }
+    
+    private fun handleAlarmIntent(intent: Intent?) {
+        if (intent?.action == BROADCAST_STRING_SHOW_ALARM_POPUP) {
+            val alarmJson = intent.getStringExtra(AlarmConstant.KEY_ALARM)
+            if (alarmJson != null) {
+                val alarm = Gson().fromJson(alarmJson, AlarmModel::class.java)
+                showAlarm(alarm)
+            }
+        }
     }
 
     private fun initView() {
@@ -77,9 +163,8 @@ class AlarmActivity : BaseActivity() {
     }
 
     private fun initEventListener() {
-        binding.alarmToolbar.toolbarIvIconRight.setOnClickListener {
-            showAppInfo()
-        }
+        // Material 3 toolbar - no need for custom icon listeners
+        // The toolbar is now a MaterialToolbar from the layout
 
         binding.fabAddAlarm.setOnClickListener {
             val intent = Intent(this, AddEditAlarmActivity::class.java)
@@ -107,11 +192,14 @@ class AlarmActivity : BaseActivity() {
     }
 
     private fun initToolbar() {
-        binding.alarmToolbar.toolbarTvTitle.text = getString(R.string.title_alarm)
-        binding.alarmToolbar.toolbarIvIconLeft.setImageResource(R.drawable.ic_chevron_left_white_24dp)
-        binding.alarmToolbar.toolbarIvIconLeft.visibility = View.GONE
-        binding.alarmToolbar.toolbarIvIconRight.setImageResource(R.drawable.ic_info_50)
-        binding.alarmToolbar.toolbarIvIconRight.visibility = View.VISIBLE
+        // Material 3 toolbar is set in XML with title
+        // Setup menu item click listener if needed
+        binding.alarmToolbar.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                // Add menu item handling here if needed
+                else -> false
+            }
+        }
     }
 
     private fun isServiceRunning(): Boolean {
@@ -153,7 +241,8 @@ class AlarmActivity : BaseActivity() {
                 } else if (BROADCAST_STRING_CLOSE_DIALOG == intent.action) {
                     if (alarmDialog != null) alarmDialog!!.dismiss()
                 } else if (BROADCAST_STRING_REFRESH_ALARMS == intent.action) {
-                    //if (mPresenter != null) mPresenter.getAlarms()
+                    // Refresh alarm list when broadcast is received
+                    viewModel.getAlarms()
                 } else if (BROADCAST_STRING_SHOW_ALARM_POPUP == intent.action) {
                     val alarmJson = intent.getStringExtra(AlarmConstant.KEY_ALARM)
                     val alarm = Gson().fromJson(alarmJson, AlarmModel::class.java)
@@ -171,27 +260,43 @@ class AlarmActivity : BaseActivity() {
     fun showAlarm(alarm: AlarmModel) {
         //hideLoadingIcon()
         this.alarm = alarm
-        if (alarmDialog == null) {
-            alarmDialog = AlarmDialog()
+        
+        // Check if dialog is already showing, if so dismiss it first
+        if (alarmDialog != null && alarmDialog!!.isAdded) {
+            try {
+                alarmDialog!!.dismissAllowingStateLoss()
+            } catch (e: Exception) {
+                // Ignore if already dismissed
+            }
+            alarmDialog = null
         }
-        if (!alarmDialog!!.isVisible) {
-            alarmDialog!!.setCallBackListener(object : AlarmDialog.CallBackListener {
-                override fun onDismiss() {
-                    finishAlarm()
-                }
+        
+        // Create new dialog instance
+        alarmDialog = AlarmDialog()
+        alarmDialog!!.setCallBackListener(object : AlarmDialog.CallBackListener {
+            override fun onDismiss() {
+                finishAlarm()
+            }
 
-                override fun onHide() {
-                    viewModel.getAlarms()
-                }
-            })
-            alarmDialog!!.setMessage(alarm.name)
-            alarmDialog!!.setTime(
-                resources.getString(
-                    R.string.time_alarm,
-                    TimeUtil.formatDateFromTimeStamp(alarm.time)
-                )
+            override fun onHide() {
+                viewModel.getAlarms()
+            }
+        })
+        alarmDialog!!.setMessage(alarm.name)
+        alarmDialog!!.setTime(
+            resources.getString(
+                R.string.time_alarm,
+                TimeUtil.formatDateFromTimeStamp(alarm.time)
             )
-            alarmDialog!!.show(supportFragmentManager, "ALARM DIALOG")
+        )
+        
+        // Show dialog safely
+        try {
+            if (!isFinishing && !isDestroyed) {
+                alarmDialog!!.show(supportFragmentManager, "ALARM DIALOG")
+            }
+        } catch (e: Exception) {
+            Log.e("AlarmActivity", "Error showing alarm dialog: ${e.message}", e)
         }
     }
 
@@ -315,6 +420,21 @@ class AlarmActivity : BaseActivity() {
             val alarm = Gson().fromJson(alarmJson, AlarmModel::class.java)
             showAlarm(alarm)
         }
+    }
 
+    override fun onResume() {
+        super.onResume()
+        // Refresh alarm list when returning from AddEditAlarmActivity
+        if (!firstStart) {
+            viewModel.getAlarms()
+        }
+        firstStart = false
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (broadcastReceiver != null) {
+            unregisterReceiver(broadcastReceiver)
+        }
     }
 }

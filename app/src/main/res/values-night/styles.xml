@@ -1,0 +1,67 @@
+<resources>
+    <!-- Dark application theme - Material You 3.0 -->
+    <style name="app_theme" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:popupMenuStyle">@style/popup_menu</item>
+        <item name="android:windowActionBarOverlay">true</item>
+        
+        <!-- Material 3 Dark Color Tokens -->
+        <item name="colorPrimary">@color/md_theme_dark_primary</item>
+        <item name="colorOnPrimary">@color/md_theme_dark_onPrimary</item>
+        <item name="colorPrimaryContainer">@color/md_theme_dark_primaryContainer</item>
+        <item name="colorOnPrimaryContainer">@color/md_theme_dark_onPrimaryContainer</item>
+        
+        <item name="colorSecondary">@color/md_theme_dark_secondary</item>
+        <item name="colorOnSecondary">@color/md_theme_dark_onSecondary</item>
+        <item name="colorSecondaryContainer">@color/md_theme_dark_secondaryContainer</item>
+        <item name="colorOnSecondaryContainer">@color/md_theme_dark_onSecondaryContainer</item>
+        
+        <item name="colorTertiary">@color/md_theme_dark_tertiary</item>
+        <item name="colorOnTertiary">@color/md_theme_dark_onTertiary</item>
+        <item name="colorTertiaryContainer">@color/md_theme_dark_tertiaryContainer</item>
+        <item name="colorOnTertiaryContainer">@color/md_theme_dark_onTertiaryContainer</item>
+        
+        <item name="colorError">@color/md_theme_dark_error</item>
+        <item name="colorOnError">@color/md_theme_dark_onError</item>
+        <item name="colorErrorContainer">@color/md_theme_dark_errorContainer</item>
+        <item name="colorOnErrorContainer">@color/md_theme_dark_onErrorContainer</item>
+        
+        <item name="android:colorBackground">@color/md_theme_dark_background</item>
+        <item name="colorOnBackground">@color/md_theme_dark_onBackground</item>
+        <item name="colorSurface">@color/md_theme_dark_surface</item>
+        <item name="colorOnSurface">@color/md_theme_dark_onSurface</item>
+        <item name="colorSurfaceVariant">@color/md_theme_dark_surfaceVariant</item>
+        <item name="colorOnSurfaceVariant">@color/md_theme_dark_onSurfaceVariant</item>
+        
+        <item name="colorOutline">@color/md_theme_dark_outline</item>
+        <item name="colorOutlineVariant">@color/md_theme_dark_outlineVariant</item>
+        
+        <!-- Shape Appearance -->
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.Material3.SmallComponent</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.Material3.MediumComponent</item>
+        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.Material3.LargeComponent</item>
+        
+        <!-- Status bar color for dark theme -->
+        <item name="android:statusBarColor">@color/md_theme_dark_surface</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+
+    <style name="popup_menu">
+        <item name="android:background">@color/md_theme_dark_surfaceContainer</item>
+        <item name="android:dropDownWidth">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/md_theme_dark_onSurface</item>
+    </style>
+
+    <style name="TextInputLayout" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/md_theme_dark_primary</item>
+        <item name="android:textColorHint">@color/md_theme_dark_onSurfaceVariant</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <style name="LoadingDialogTheme">
+        <item name="android:windowEnterAnimation">@anim/anim_enter_loading</item>
+        <item name="android:windowExitAnimation">@anim/anim_exit_loading</item>
+    </style>
+</resources>

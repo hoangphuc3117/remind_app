@@ -45,10 +45,35 @@ public class PathUtil {
             } else if (isDownloadsDocument(uri)) {// DownloadsProvider
 
                 final String id = DocumentsContract.getDocumentId(uri);
-                final Uri contentUri = ContentUris.withAppendedId(
-                        Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
-
-                return getDataColumn(context, contentUri, null, null);
+                
+                // Handle "raw:" prefix for direct file paths
+                if (id != null && id.startsWith("raw:")) {
+                    return id.substring(4); // Remove "raw:" prefix
+                }
+                
+                // Handle "msf:" prefix (modern storage framework)
+                if (id != null && id.startsWith("msf:")) {
+                    // Can't convert msf URIs to file paths, return null
+                    return null;
+                }
+                
+                // Try to parse as long for numeric IDs
+                try {
+                    final Uri contentUri = ContentUris.withAppendedId(
+                            Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+                    return getDataColumn(context, contentUri, null, null);
+                } catch (NumberFormatException e) {
+                    // If ID is not a number, try alternative content URIs
+                    try {
+                        // Try my_downloads
+                        final Uri contentUri = ContentUris.withAppendedId(
+                                Uri.parse("content://downloads/my_downloads"), Long.valueOf(id));
+                        return getDataColumn(context, contentUri, null, null);
+                    } catch (Exception ex) {
+                        // Can't get path, return null to use URI directly
+                        return null;
+                    }
+                }
 
             } else if (isMediaDocument(uri)) {// MediaProvider
                 final String docId = DocumentsContract.getDocumentId(uri);
