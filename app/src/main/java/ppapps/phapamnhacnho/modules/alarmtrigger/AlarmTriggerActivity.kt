@@ -98,11 +98,6 @@ class AlarmTriggerActivity : BaseActivity() {
         moveTaskToBack(true)
     }
 
-    override fun onBackPressed() {
-        // Prevent back button from closing alarm
-        // User must explicitly dismiss or hide
-    }
-
     companion object {
         const val TAG = "AlarmTriggerActivity"
     }

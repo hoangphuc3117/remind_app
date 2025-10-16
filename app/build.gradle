@@ -12,6 +12,12 @@ android {
         versionCode 5
         versionName "1.0"
         multiDexEnabled true
+        
+        // Support for 16KB page size (required for Play Store)
+        // This NDK filter ensures native libraries are compatible with 16KB pages
+        ndk {
+            abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
+        }
     }
     
     compileOptions {
@@ -48,6 +54,12 @@ android {
         }
     }
 
+    // Packaging options for 16KB page size support
+    packagingOptions {
+        jniLibs {
+            useLegacyPackaging = false
+        }
+    }
 
     buildFeatures {
         dataBinding true

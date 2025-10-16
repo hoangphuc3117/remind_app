@@ -41,7 +41,30 @@ class AlarmWorker(appContext: Context, workerParams: WorkerParameters) : Worker(
             return Result.failure()
         }
         
-        Log.d("AlarmWorker", "Alarm found: name=${alarm.name}, time=${alarm.time}")
+        Log.d("AlarmWorker", "Alarm found: name=${alarm.name}, time=${alarm.time}, countLoopTimes=${alarm.countLoopTimes}, loopTime=${alarm.loopTime}")
+
+        // Check if we've reached the max loop times
+        if (alarm.countLoopTimes >= alarm.loopTime && alarm.loopTime > 0) {
+            Log.d("AlarmWorker", "Alarm has completed all ${alarm.loopTime} loops. Stopping.")
+            // Reset counter for next day's alarm if it's recurring
+            alarm.countLoopTimes = 0
+            ppapps.phapamnhacnho.basemodules.database.DatabaseFactory.updateAlarm(alarm)
+                .toBlocking()
+                .firstOrDefault(false)
+            
+            // Schedule next alarm if it's a recurring alarm (daily/weekly/monthly)
+            scheduleNextAlarmIfNeeded(alarm)
+            return Result.success()
+        }
+
+        // Increment loop counter
+        alarm.countLoopTimes++
+        Log.d("AlarmWorker", "Incrementing countLoopTimes to ${alarm.countLoopTimes}")
+        
+        // Update alarm in database with new counter
+        ppapps.phapamnhacnho.basemodules.database.DatabaseFactory.updateAlarm(alarm)
+            .toBlocking()
+            .firstOrDefault(false)
 
         // Initialize media player for alarm sound
         initializeMediaPlayer(alarm)
@@ -57,8 +80,18 @@ class AlarmWorker(appContext: Context, workerParams: WorkerParameters) : Worker(
         applicationContext.startActivity(intent)
         Log.d("AlarmWorker", "AlarmActivity launched to show alarm popup")
 
-        // Schedule next alarm if needed (for recurring alarms)
-        scheduleNextAlarmIfNeeded(alarm)
+        // If not reached max loops, schedule to repeat after timeAlarm duration
+        if (alarm.countLoopTimes < alarm.loopTime) {
+            scheduleRepeatAlarm(alarm)
+        } else {
+            // Reached max loops, reset counter and schedule next day/week/month if recurring
+            Log.d("AlarmWorker", "Completed all ${alarm.loopTime} loops")
+            alarm.countLoopTimes = 0
+            ppapps.phapamnhacnho.basemodules.database.DatabaseFactory.updateAlarm(alarm)
+                .toBlocking()
+                .firstOrDefault(false)
+            scheduleNextAlarmIfNeeded(alarm)
+        }
 
         return Result.success()
     }
@@ -75,6 +108,44 @@ class AlarmWorker(appContext: Context, workerParams: WorkerParameters) : Worker(
             // If media player fails, continue with notification only
             Log.e("AlarmWorker", "Failed to initialize media player: ${e.message}", e)
             e.printStackTrace()
+        }
+    }
+
+    private fun scheduleRepeatAlarm(alarm: ppapps.phapamnhacnho.model.AlarmModel) {
+        // Schedule alarm to repeat after timeAlarm seconds
+        val repeatAfterMs = alarm.timeAlarm * 1000 // Convert seconds to milliseconds
+        val nextRepeatTime = System.currentTimeMillis() + repeatAfterMs
+        
+        Log.d("AlarmWorker", "Scheduling repeat alarm ${alarm.countLoopTimes}/${alarm.loopTime} after ${alarm.timeAlarm} seconds")
+        
+        val alarmManager = applicationContext.getSystemService(Context.ALARM_SERVICE) as android.app.AlarmManager
+        
+        // Check if we can schedule exact alarms on Android 12+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+            if (!alarmManager.canScheduleExactAlarms()) {
+                Log.w("AlarmWorker", "Cannot schedule exact alarms - permission not granted")
+                return
+            }
+        }
+        
+        val alarmIntent = Intent(applicationContext, ppapps.phapamnhacnho.modules.alarmreceiver.AlarmReceiver::class.java)
+        alarmIntent.putExtra(AlarmConstant.KEY_ALARM_CODE, alarm.code)
+        val pendingIntent = PendingIntent.getBroadcast(
+            applicationContext,
+            alarm.code.toInt(),
+            alarmIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+        
+        try {
+            alarmManager.setExactAndAllowWhileIdle(
+                android.app.AlarmManager.RTC_WAKEUP,
+                nextRepeatTime,
+                pendingIntent
+            )
+            Log.d("AlarmWorker", "✓ Repeat alarm scheduled for ${java.text.SimpleDateFormat("HH:mm:ss").format(java.util.Date(nextRepeatTime))}")
+        } catch (e: SecurityException) {
+            Log.e("AlarmWorker", "SecurityException: Cannot schedule repeat alarm - ${e.message}", e)
         }
     }
 
