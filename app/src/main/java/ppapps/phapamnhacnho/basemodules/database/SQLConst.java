@@ -36,6 +36,8 @@ class SQLConst {
     static final String ALARM_PLAY_TYPE = "AlarmPlayType";
 
     static final String ALARM_LOOP_TYPE = "AlarmLoopType";
+    
+    static final String ALARM_SELECTED_DAYS = "AlarmSelectedDays";
 
     static final String ALARM_STATUS = "AlarmStatus";
 
@@ -59,7 +61,8 @@ class SQLConst {
             "'" + ALARM_FILE_INDEX + "' INTEGER," +
             "'" + ALARM_PLAYING_POSITION + "' INTEGER," +
             "'" + ALARM_PLAY_TYPE + "' INTEGER," +
-            "'" + ALARM_LOOP_TYPE + "' INTEGER);";
+            "'" + ALARM_LOOP_TYPE + "' INTEGER," +
+            "'" + ALARM_SELECTED_DAYS + "' INTEGER DEFAULT 0);";
 
 
     static final String SQL_GET_ALARMS = "Select * " + LF +

@@ -86,9 +86,25 @@ class AlarmTriggerActivity : BaseActivity() {
     }
 
     private fun dismissAlarm() {
-        // Send broadcast to stop alarm service
+        // Cancel the notification
+        val notificationManager = getSystemService(android.content.Context.NOTIFICATION_SERVICE) as android.app.NotificationManager
+        notificationManager.cancel(AlarmConstant.ALARM_NOTIFICATION_ID)
+        
+        // Cancel any ongoing WorkManager tasks for this alarm
+        alarm?.let {
+            androidx.work.WorkManager.getInstance(this).cancelAllWorkByTag("alarm_${it.code}")
+        }
+        
+        // Send broadcast to close dialog in AlarmActivity
         val intent = Intent(AlarmActivity.BROADCAST_STRING_CLOSE_DIALOG)
         sendBroadcast(intent)
+        
+        // Release wake lock
+        try {
+            ppapps.phapamnhacnho.basemodules.util.StaticWakeLock.lockOff()
+        } catch (e: Exception) {
+            // Ignore if wake lock wasn't held
+        }
         
         finish()
     }

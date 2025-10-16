@@ -26,4 +26,11 @@
     <color name="color_yellow_A200">#FFFF00</color>
     <color name="color_yellow_500">#FFEB3B</color>
     <color name="color_yellow_600">#FDD835</color>
+
+    <!-- Day selection button colors -->
+    <color name="day_button_selected">#6200EA</color>
+    <color name="day_button_selected_border">#6200EA</color>
+    <color name="day_button_unselected">#E8DEF8</color>
+    <color name="day_button_text_selected">#FFFFFF</color>
+    <color name="day_button_text_unselected">#49454F</color>
 </resources>

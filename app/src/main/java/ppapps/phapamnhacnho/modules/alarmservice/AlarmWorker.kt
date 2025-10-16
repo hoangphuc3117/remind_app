@@ -157,7 +157,30 @@ class AlarmWorker(appContext: Context, workerParams: WorkerParameters) : Worker(
             
             when (alarm.loopType) {
                 ppapps.phapamnhacnho.modules.addeditalarm.adapter.LoopTypeAdapter.LOOP_DAY -> {
-                    calendar.add(java.util.Calendar.DAY_OF_MONTH, 1)
+                    // For Every Day with selected days, find next matching day
+                    if (alarm.selectedDays != 0 && alarm.selectedDays != 127) {
+                        calendar.add(java.util.Calendar.DAY_OF_MONTH, 1)
+                        
+                        // Find next day that matches selectedDays bitmask
+                        var attempts = 0
+                        while (attempts < 7) {
+                            val dayOfWeek = calendar.get(java.util.Calendar.DAY_OF_WEEK)
+                            val dayFlag = getDayFlag(dayOfWeek)
+                            
+                            if (alarm.selectedDays and dayFlag != 0) {
+                                // This day is selected
+                                break
+                            } else {
+                                // This day is not selected, try next day
+                                calendar.add(java.util.Calendar.DAY_OF_MONTH, 1)
+                                attempts++
+                            }
+                        }
+                        Log.d("AlarmWorker", "Next alarm scheduled for: ${java.text.SimpleDateFormat("yyyy-MM-dd HH:mm").format(calendar.time)}")
+                    } else {
+                        // All days selected or no specific days (old behavior)
+                        calendar.add(java.util.Calendar.DAY_OF_MONTH, 1)
+                    }
                 }
                 ppapps.phapamnhacnho.modules.addeditalarm.adapter.LoopTypeAdapter.LOOP_WEEK -> {
                     calendar.add(java.util.Calendar.DAY_OF_MONTH, 7)
@@ -203,6 +226,21 @@ class AlarmWorker(appContext: Context, workerParams: WorkerParameters) : Worker(
             } catch (e: SecurityException) {
                 // Permission was revoked, cannot schedule alarm
             }
+        }
+    }
+    
+    // Convert Calendar.DAY_OF_WEEK to bit flag
+    // Sunday=1, Monday=2, Tuesday=4, Wednesday=8, Thursday=16, Friday=32, Saturday=64
+    private fun getDayFlag(dayOfWeek: Int): Int {
+        return when (dayOfWeek) {
+            java.util.Calendar.SUNDAY -> 1
+            java.util.Calendar.MONDAY -> 2
+            java.util.Calendar.TUESDAY -> 4
+            java.util.Calendar.WEDNESDAY -> 8
+            java.util.Calendar.THURSDAY -> 16
+            java.util.Calendar.FRIDAY -> 32
+            java.util.Calendar.SATURDAY -> 64
+            else -> 0
         }
     }
 

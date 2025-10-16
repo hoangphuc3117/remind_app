@@ -36,4 +36,9 @@ class AlarmModel {
     var loopType = 0
 
     var nextTime: Long = 0
+    
+    // Selected days of week (bit flags): Sunday=1, Monday=2, Tuesday=4, Wednesday=8, Thursday=16, Friday=32, Saturday=64
+    // Example: Monday+Wednesday+Friday = 2+8+32 = 42
+    // 0 means all days (when loopType is LOOP_DAY)
+    var selectedDays = 0
 }

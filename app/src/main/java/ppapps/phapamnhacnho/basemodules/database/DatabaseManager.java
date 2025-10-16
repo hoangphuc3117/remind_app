@@ -54,6 +54,38 @@ public class DatabaseManager {
 
         if (!isTableExist(SQLConst.TABLE_ALARM)) {
             database.execSQL(SQLConst.SQL_CREATE_TABLE_ALARM);
+        } else {
+            // Migration: Add ALARM_SELECTED_DAYS column if it doesn't exist
+            addColumnIfNotExists(SQLConst.TABLE_ALARM, SQLConst.ALARM_SELECTED_DAYS, "INTEGER DEFAULT 0");
+        }
+    }
+    
+    private void addColumnIfNotExists(String tableName, String columnName, String columnType) {
+        Cursor cursor = null;
+        try {
+            cursor = database.rawQuery("PRAGMA table_info(" + tableName + ")", null);
+            boolean columnExists = false;
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    String name = cursor.getString(cursor.getColumnIndex("name"));
+                    if (columnName.equals(name)) {
+                        columnExists = true;
+                        break;
+                    }
+                } while (cursor.moveToNext());
+            }
+            
+            if (!columnExists) {
+                String alterTableQuery = "ALTER TABLE " + tableName + " ADD COLUMN '" + columnName + "' " + columnType;
+                database.execSQL(alterTableQuery);
+                android.util.Log.d("DatabaseManager", "Added column: " + columnName + " to table: " + tableName);
+            }
+        } catch (Exception e) {
+            android.util.Log.e("DatabaseManager", "Error adding column: " + columnName, e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
         }
     }
 
@@ -90,6 +122,7 @@ public class DatabaseManager {
             contentValues.put(SQLConst.ALARM_PLAYING_POSITION, alarm.getPlayingPosition());
             contentValues.put(SQLConst.ALARM_PLAY_TYPE, alarm.getPlayType());
             contentValues.put(SQLConst.ALARM_LOOP_TYPE, alarm.getLoopType());
+            contentValues.put(SQLConst.ALARM_SELECTED_DAYS, alarm.getSelectedDays());
             long id = database.insert(SQLConst.TABLE_ALARM, null, contentValues);
             database.setTransactionSuccessful();
             Log.d("DatabaseManager", "addAlarm: inserted with id=" + id);
@@ -139,6 +172,8 @@ public class DatabaseManager {
                     alarm.setPlayType(playType);
                     int loopType = cursor.getInt(cursor.getColumnIndex(SQLConst.ALARM_LOOP_TYPE));
                     alarm.setLoopType(loopType);
+                    int selectedDays = cursor.getInt(cursor.getColumnIndex(SQLConst.ALARM_SELECTED_DAYS));
+                    alarm.setSelectedDays(selectedDays);
                     alarmList.add(alarm);
                 } while (cursor.moveToNext());
             }
@@ -186,6 +221,8 @@ public class DatabaseManager {
                 alarm.setPlayType(playType);
                 int loopType = cursor.getInt(cursor.getColumnIndex(SQLConst.ALARM_LOOP_TYPE));
                 alarm.setLoopType(loopType);
+                int selectedDays = cursor.getInt(cursor.getColumnIndex(SQLConst.ALARM_SELECTED_DAYS));
+                alarm.setSelectedDays(selectedDays);
             }
         } catch (Exception ex) {
             Log.d("ERROR", "Cannot get alarms from database");
@@ -217,6 +254,7 @@ public class DatabaseManager {
             contentValues.put(SQLConst.ALARM_LOOP_TYPE, alarmModel.getLoopType());
             contentValues.put(SQLConst.ALARM_FILE_INDEX, alarmModel.getFileIndex());
             contentValues.put(SQLConst.ALARM_PLAYING_POSITION, alarmModel.getPlayingPosition());
+            contentValues.put(SQLConst.ALARM_SELECTED_DAYS, alarmModel.getSelectedDays());
             int value = database.update(SQLConst.TABLE_ALARM, contentValues, SQLConst.ALARM_CODE + "=?",
                     new String[]{String.valueOf(alarmModel.getCode())});
             database.setTransactionSuccessful();

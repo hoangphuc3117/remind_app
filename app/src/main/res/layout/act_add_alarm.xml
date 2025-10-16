@@ -248,6 +248,174 @@
                         android:paddingEnd="12dp"
                         android:layout_marginBottom="12dp" />
 
+                    <!-- Days of Week Selection (visible when Loop Type = Every Day) -->
+                    <LinearLayout
+                        android:id="@+id/add_alarm_days_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        android:layout_marginBottom="12dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/add_alarm_repeat_days"
+                            android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                            android:textColor="?attr/colorOnSurfaceVariant"
+                            android:layout_marginBottom="8dp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center"
+                            android:weightSum="7">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btn_day_monday"
+                                style="@style/Widget.Material3.Button.OutlinedButton"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_weight="1"
+                                android:layout_marginStart="2dp"
+                                android:layout_marginEnd="2dp"
+                                android:text="@string/day_monday"
+                                android:textSize="10sp"
+                                android:minWidth="0dp"
+                                android:paddingStart="0dp"
+                                android:paddingEnd="0dp"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:insetLeft="0dp"
+                                android:insetRight="0dp"
+                                app:cornerRadius="20dp"
+                                app:strokeWidth="0dp" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btn_day_tuesday"
+                                style="@style/Widget.Material3.Button.OutlinedButton"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_weight="1"
+                                android:layout_marginStart="2dp"
+                                android:layout_marginEnd="2dp"
+                                android:text="@string/day_tuesday"
+                                android:textSize="10sp"
+                                android:minWidth="0dp"
+                                android:paddingStart="0dp"
+                                android:paddingEnd="0dp"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:insetLeft="0dp"
+                                android:insetRight="0dp"
+                                app:cornerRadius="20dp"
+                                app:strokeWidth="0dp" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btn_day_wednesday"
+                                style="@style/Widget.Material3.Button.OutlinedButton"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_weight="1"
+                                android:layout_marginStart="2dp"
+                                android:layout_marginEnd="2dp"
+                                android:text="@string/day_wednesday"
+                                android:textSize="10sp"
+                                android:minWidth="0dp"
+                                android:paddingStart="0dp"
+                                android:paddingEnd="0dp"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:insetLeft="0dp"
+                                android:insetRight="0dp"
+                                app:cornerRadius="20dp"
+                                app:strokeWidth="0dp" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btn_day_thursday"
+                                style="@style/Widget.Material3.Button.OutlinedButton"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_weight="1"
+                                android:layout_marginStart="2dp"
+                                android:layout_marginEnd="2dp"
+                                android:text="@string/day_thursday"
+                                android:textSize="10sp"
+                                android:minWidth="0dp"
+                                android:paddingStart="0dp"
+                                android:paddingEnd="0dp"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:insetLeft="0dp"
+                                android:insetRight="0dp"
+                                app:cornerRadius="20dp"
+                                app:strokeWidth="0dp" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btn_day_friday"
+                                style="@style/Widget.Material3.Button.OutlinedButton"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_weight="1"
+                                android:layout_marginStart="2dp"
+                                android:layout_marginEnd="2dp"
+                                android:text="@string/day_friday"
+                                android:textSize="10sp"
+                                android:minWidth="0dp"
+                                android:paddingStart="0dp"
+                                android:paddingEnd="0dp"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:insetLeft="0dp"
+                                android:insetRight="0dp"
+                                app:cornerRadius="20dp"
+                                app:strokeWidth="0dp" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btn_day_saturday"
+                                style="@style/Widget.Material3.Button.OutlinedButton"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_weight="1"
+                                android:layout_marginStart="2dp"
+                                android:layout_marginEnd="2dp"
+                                android:text="@string/day_saturday"
+                                android:textSize="10sp"
+                                android:minWidth="0dp"
+                                android:paddingStart="0dp"
+                                android:paddingEnd="0dp"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:insetLeft="0dp"
+                                android:insetRight="0dp"
+                                app:cornerRadius="20dp"
+                                app:strokeWidth="0dp" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btn_day_sunday"
+                                style="@style/Widget.Material3.Button.OutlinedButton"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_weight="1"
+                                android:layout_marginStart="2dp"
+                                android:layout_marginEnd="2dp"
+                                android:text="@string/day_sunday"
+                                android:textSize="10sp"
+                                android:minWidth="0dp"
+                                android:paddingStart="0dp"
+                                android:paddingEnd="0dp"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:insetLeft="0dp"
+                                android:insetRight="0dp"
+                                app:cornerRadius="20dp"
+                                app:strokeWidth="0dp" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
                     <!-- Loop Times -->
                     <TextView
                         android:layout_width="wrap_content"

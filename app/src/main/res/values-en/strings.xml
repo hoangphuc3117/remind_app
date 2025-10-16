@@ -14,8 +14,9 @@
 <string name="add_alarm_play_type">Alarm Type</string>
 <string name="add_alarm_play_time">Alarm Duration Time</string>
 <string name="add_alarm_loop">Loop</string>
-<string name="add_alarm_loop_times">Loop Times</string>
-<string name="add_alarm_calendar_type">Loại lịch</string>
+    <string name="add_alarm_loop_times">Loop times</string>
+    <string name="add_alarm_repeat_days">Repeat on days</string>
+    <string name="add_alarm_calendar_type">Calendar type</string>
 <string name="add_alarm_select_file_or_folder">Select File Or Folder</string>
 <string name="add_alarm_second">seconds</string>
 <string name="add_alarm_times">times</string>
@@ -61,10 +62,26 @@
 <string name="settings_language_desc_en">English</string>
 <string name="settings_developer_info">Developer Information</string>
 <string name="settings_developer_name">Hoàng Phúc</string>
-<string name="settings_developer_role">Android Developer</string>
-<string name="settings_app_version">Version 3.0.0</string>
+    <string name="settings_developer_role">Android Developer</string>
+    <string name="settings_app_version">Version 3.0.0</string>
+    
+    <!-- Days of Week -->
+    <string name="day_monday">Mon</string>
+    <string name="day_tuesday">Tue</string>
+    <string name="day_wednesday">Wed</string>
+    <string name="day_thursday">Thu</string>
+    <string name="day_friday">Fri</string>
+    <string name="day_saturday">Sat</string>
+    <string name="day_sunday">Sun</string>
+    <string name="day_monday_full">Monday</string>
+    <string name="day_tuesday_full">Tuesday</string>
+    <string name="day_wednesday_full">Wednesday</string>
+    <string name="day_thursday_full">Thursday</string>
+    <string name="day_friday_full">Friday</string>
+    <string name="day_saturday_full">Saturday</string>
+    <string name="day_sunday_full">Sunday</string>
 
-<string-array name="alarm_play_type">
+    <string-array name="alarm_play_type">
     <item>Beginning</item>
     <item>Continue</item>
 </string-array>

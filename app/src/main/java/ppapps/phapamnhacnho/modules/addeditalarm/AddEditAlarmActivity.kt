@@ -163,6 +163,9 @@ class AddEditAlarmActivity : BaseActivity(),
     private var mOldAlarm: AlarmModel? = null
 
     private var mNewAlarm: AlarmModel? = null
+    
+    // Selected days of week bit flags
+    private var selectedDays = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -291,6 +294,13 @@ class AddEditAlarmActivity : BaseActivity(),
         binding.addAlarmSpLoopType.setSelection(mOldAlarm!!.loopType)
         binding.addAlarmEdtLoopTimes.setText(mOldAlarm!!.loopTime.toString())
         binding.addAlarmEdtTimeAlarm.setText(mOldAlarm!!.timeAlarm.toString())
+        
+        // Load selected days
+        selectedDays = mOldAlarm!!.selectedDays
+        if (mOldAlarm!!.loopType == LoopTypeAdapter.LOOP_DAY && selectedDays != 0) {
+            binding.addAlarmDaysContainer.visibility = View.VISIBLE
+            updateDayButtonsUI()
+        }
 
         //Init time
         val calendar = Calendar.getInstance()
@@ -355,6 +365,110 @@ class AddEditAlarmActivity : BaseActivity(),
         val loopTypes = resources.getStringArray(R.array.alarm_loop_type)
         val loopTypeAdapter = LoopTypeAdapter(this, loopTypes)
         binding.addAlarmSpLoopType.adapter = loopTypeAdapter
+        
+        // Listen for loop type changes to show/hide day selector
+        binding.addAlarmSpLoopType.onItemSelectedListener = object : android.widget.AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: android.widget.AdapterView<*>?, view: View?, position: Int, id: Long) {
+                // Show day selector only when "Every Day" (LOOP_DAY) is selected
+                if (position == LoopTypeAdapter.LOOP_DAY) {
+                    binding.addAlarmDaysContainer.visibility = View.VISIBLE
+                    
+                    // Initialize selectedDays to all days if creating new alarm
+                    if (mAlarmType == ADD_ALARM && selectedDays == 0) {
+                        selectedDays = 127 // All days selected (1+2+4+8+16+32+64 = 127)
+                        updateDayButtonsUI()
+                    }
+                } else {
+                    binding.addAlarmDaysContainer.visibility = View.GONE
+                }
+            }
+
+            override fun onNothingSelected(parent: android.widget.AdapterView<*>?) {
+                binding.addAlarmDaysContainer.visibility = View.GONE
+            }
+        }
+        
+        // Setup day buttons
+        setupDayButtons()
+    }
+    
+    private fun setupDayButtons() {
+        val dayButtons = listOf(
+            binding.btnDaySunday to 1,    // Sunday = 1
+            binding.btnDayMonday to 2,    // Monday = 2
+            binding.btnDayTuesday to 4,   // Tuesday = 4
+            binding.btnDayWednesday to 8, // Wednesday = 8
+            binding.btnDayThursday to 16, // Thursday = 16
+            binding.btnDayFriday to 32,   // Friday = 32
+            binding.btnDaySaturday to 64  // Saturday = 64
+        )
+        
+        dayButtons.forEach { (button, dayFlag) ->
+            button.setOnClickListener {
+                toggleDaySelection(button, dayFlag)
+            }
+        }
+    }
+    
+    private fun toggleDaySelection(button: com.google.android.material.button.MaterialButton, dayFlag: Int) {
+        if (selectedDays and dayFlag != 0) {
+            // Day is selected, deselect it
+            selectedDays = selectedDays and dayFlag.inv()
+            // Light background, no border
+            button.strokeWidth = 0
+            button.backgroundTintList = android.content.res.ColorStateList.valueOf(
+                androidx.core.content.ContextCompat.getColor(this, R.color.day_button_unselected)
+            )
+            button.setTextColor(
+                androidx.core.content.ContextCompat.getColor(this, R.color.day_button_text_unselected)
+            )
+        } else {
+            // Day is not selected, select it
+            selectedDays = selectedDays or dayFlag
+            // Purple background, no border (circular shape from cornerRadius)
+            button.strokeWidth = 0
+            button.backgroundTintList = android.content.res.ColorStateList.valueOf(
+                androidx.core.content.ContextCompat.getColor(this, R.color.day_button_selected)
+            )
+            button.setTextColor(
+                androidx.core.content.ContextCompat.getColor(this, R.color.day_button_text_selected)
+            )
+        }
+        Log.d("DaySelection", "Selected days bitmask: $selectedDays")
+    }
+    
+    private fun updateDayButtonsUI() {
+        val dayButtons = listOf(
+            binding.btnDaySunday to 1,
+            binding.btnDayMonday to 2,
+            binding.btnDayTuesday to 4,
+            binding.btnDayWednesday to 8,
+            binding.btnDayThursday to 16,
+            binding.btnDayFriday to 32,
+            binding.btnDaySaturday to 64
+        )
+        
+        dayButtons.forEach { (button, dayFlag) ->
+            if (selectedDays and dayFlag != 0) {
+                // Selected state: Purple background, white text
+                button.strokeWidth = 0
+                button.backgroundTintList = android.content.res.ColorStateList.valueOf(
+                    androidx.core.content.ContextCompat.getColor(this, R.color.day_button_selected)
+                )
+                button.setTextColor(
+                    androidx.core.content.ContextCompat.getColor(this, R.color.day_button_text_selected)
+                )
+            } else {
+                // Unselected state: Light background, dark text
+                button.strokeWidth = 0
+                button.backgroundTintList = android.content.res.ColorStateList.valueOf(
+                    androidx.core.content.ContextCompat.getColor(this, R.color.day_button_unselected)
+                )
+                button.setTextColor(
+                    androidx.core.content.ContextCompat.getColor(this, R.color.day_button_text_unselected)
+                )
+            }
+        }
     }
 
     private fun initToolbar() {
@@ -438,8 +552,20 @@ class AddEditAlarmActivity : BaseActivity(),
         alarm.countLoopTimes = 1
         val loopType: Int = binding.addAlarmSpLoopType.selectedItemPosition
         alarm.loopType = loopType
+        
+        // Save selected days (for Every Day loop type)
+        if (loopType == LoopTypeAdapter.LOOP_DAY) {
+            alarm.selectedDays = if (selectedDays == 0) {
+                // No days selected = all days (127 = all 7 days)
+                127
+            } else {
+                selectedDays
+            }
+        } else {
+            alarm.selectedDays = 0
+        }
 
-        Log.d("AddAlarm", "Created alarm: name=${alarm.name}, time=${alarm.time}, uri=${alarm.uriFileFolder}")
+        Log.d("AddAlarm", "Created alarm: name=${alarm.name}, time=${alarm.time}, uri=${alarm.uriFileFolder}, selectedDays=${alarm.selectedDays}")
         viewModel.addAlarm(alarm)
     }
 
@@ -472,6 +598,18 @@ class AddEditAlarmActivity : BaseActivity(),
         mNewAlarm?.countLoopTimes = 1
         val loopType: Int = binding.addAlarmSpLoopType.selectedItemPosition
         mNewAlarm?.loopType = loopType
+        
+        // Save selected days (for Every Day loop type)
+        if (loopType == LoopTypeAdapter.LOOP_DAY) {
+            mNewAlarm?.selectedDays = if (selectedDays == 0) {
+                // No days selected = all days (127 = all 7 days)
+                127
+            } else {
+                selectedDays
+            }
+        } else {
+            mNewAlarm?.selectedDays = 0
+        }
         
         // Preserve fields from old alarm that are not editable in UI
         mNewAlarm?.fileIndex = mOldAlarm?.fileIndex ?: 0

@@ -15,6 +15,7 @@
     <string name="add_alarm_play_time">Thời lượng phát</string>
     <string name="add_alarm_loop">Chu kỳ lập</string>
     <string name="add_alarm_loop_times">Số lần lặp lại</string>
+    <string name="add_alarm_repeat_days">Lặp lại vào các ngày</string>
     <string name="add_alarm_calendar_type">Loại lịch</string>
     <string name="add_alarm_select_file_or_folder">Chọn tập tin hay thư mục</string>
     <string name="add_alarm_second">Giây</string>
@@ -63,6 +64,22 @@
     <string name="settings_developer_name">Hoàng Phúc</string>
     <string name="settings_developer_role">Android Developer</string>
     <string name="settings_app_version">Phiên bản 3.0.0</string>
+    
+    <!-- Days of Week -->
+    <string name="day_monday">T2</string>
+    <string name="day_tuesday">T3</string>
+    <string name="day_wednesday">T4</string>
+    <string name="day_thursday">T5</string>
+    <string name="day_friday">T6</string>
+    <string name="day_saturday">T7</string>
+    <string name="day_sunday">CN</string>
+    <string name="day_monday_full">Thứ Hai</string>
+    <string name="day_tuesday_full">Thứ Ba</string>
+    <string name="day_wednesday_full">Thứ Tư</string>
+    <string name="day_thursday_full">Thứ Năm</string>
+    <string name="day_friday_full">Thứ Sáu</string>
+    <string name="day_saturday_full">Thứ Bảy</string>
+    <string name="day_sunday_full">Chủ Nhật</string>
 
     <string-array name="alarm_play_type">
         <item>Từ đầu</item>
