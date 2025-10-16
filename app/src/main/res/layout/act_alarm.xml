@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorSurface"
-            app:title="@string/alarm_name"
+            app:title="@string/title_alarm"
             app:titleTextColor="?attr/colorOnSurface"
             app:titleTextAppearance="@style/TextAppearance.Material3.HeadlineSmall">
 

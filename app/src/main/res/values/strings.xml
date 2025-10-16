@@ -22,6 +22,9 @@
     <string name="add_alarm_input_name">Nhập nhắc nhở</string>
     <string name="add_alarm_input_play_time">Nhập thời lượng phát</string>
     <string name="add_alarm_input_loop_times">Nhập số lần lặp lại</string>
+    <string name="add_alarm_choose_audio">Chọn âm thanh</string>
+    <string name="add_alarm_audio_label">Âm thanh</string>
+    <string name="add_alarm_settings_label">Cài đặt</string>
     <string name="dialog_dismiss">Ngưng nhắc nhở</string>
     <string name="dialog_hide">Ẩn nhắc nhở</string>
     <string name="dialog_yes">Có</string>

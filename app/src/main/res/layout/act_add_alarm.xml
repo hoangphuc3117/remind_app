@@ -187,7 +187,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Âm thanh"
+                        android:text="@string/add_alarm_audio_label"
                         android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
                         android:textColor="?attr/colorOnSurfaceVariant"
                         android:layout_marginBottom="12dp" />
@@ -196,7 +196,7 @@
                         android:id="@+id/add_alarm_browse_file"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Chọn tệp"
+                        android:text="@string/add_alarm_choose_audio"
                         style="@style/Widget.Material3.Button.TonalButton"
                         app:cornerRadius="12dp"
                         android:layout_marginBottom="8dp" />
@@ -224,7 +224,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Cài đặt"
+                        android:text="@string/add_alarm_settings_label"
                         android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
                         android:textColor="?attr/colorOnSurfaceVariant"
                         android:layout_marginBottom="12dp" />

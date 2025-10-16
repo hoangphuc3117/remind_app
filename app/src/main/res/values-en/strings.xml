@@ -22,6 +22,9 @@
 <string name="add_alarm_input_name">Input Remind Title</string>
 <string name="add_alarm_input_play_time">Input Alarm Time</string>
 <string name="add_alarm_input_loop_times">Input Loop Times</string>
+<string name="add_alarm_choose_audio">Choose Audio</string>
+<string name="add_alarm_audio_label">Audio</string>
+<string name="add_alarm_settings_label">Settings</string>
 <string name="dialog_dismiss">Dismiss</string>
 <string name="dialog_hide">Hide</string>
 <string name="dialog_yes">Yes</string>

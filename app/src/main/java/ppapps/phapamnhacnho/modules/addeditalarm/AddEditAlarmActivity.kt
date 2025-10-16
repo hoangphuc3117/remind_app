@@ -74,18 +74,31 @@ class AddEditAlarmActivity : BaseActivity(),
                 }
                 
                 mEncodedURIMP3 = uri.toString() // Save URI as string
-                // Try to get a readable path for display
-                var displayPath: String? = null
+                
+                // Get display name from URI
+                var displayName: String? = null
                 try {
-                    displayPath = PathUtil.getPath(this, uri)
+                    // Try to get display name from content resolver
+                    contentResolver.query(uri, null, null, null, null)?.use { cursor ->
+                        if (cursor.moveToFirst()) {
+                            val displayNameIndex = cursor.getColumnIndex(android.provider.OpenableColumns.DISPLAY_NAME)
+                            if (displayNameIndex != -1) {
+                                displayName = cursor.getString(displayNameIndex)
+                            }
+                        }
+                    }
                 } catch (e: Exception) {
-                    // PathUtil may fail with certain URI formats, ignore and use fallback
                     e.printStackTrace()
                 }
                 
-                if (displayPath == null) {
-                    displayPath = uri.lastPathSegment ?: uri.toString()
+                // Fallback to last path segment if display name not found
+                if (displayName.isNullOrBlank()) {
+                    displayName = uri.lastPathSegment ?: getString(R.string.add_alarm_choose_audio)
                 }
+                
+                // Update button text to show selected file
+                binding.addAlarmBrowseFile.text = displayName
+                Toast.makeText(this, "Đã chọn: $displayName", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -105,21 +118,22 @@ class AddEditAlarmActivity : BaseActivity(),
                 }
                 
                 mEncodedURIMP3 = uri.toString() // Save URI as string
-                // For folder, try to get folder path
-                var displayPath: String? = null
+                
+                // Get display name from URI
+                var displayName: String? = null
                 try {
-                    displayPath = PathUtil.getPath(this, uri)
-                    if (displayPath != null) {
-                        displayPath = PathUtil.getFolderPathFromFilePath(displayPath)
-                    }
+                    displayName = uri.lastPathSegment
                 } catch (e: Exception) {
-                    // PathUtil may fail with certain URI formats, ignore and use fallback
                     e.printStackTrace()
                 }
                 
-                if (displayPath == null) {
-                    displayPath = uri.lastPathSegment ?: uri.toString()
+                if (displayName.isNullOrBlank()) {
+                    displayName = getString(R.string.add_alarm_choose_audio)
                 }
+                
+                // Update button text to show selected folder
+                binding.addAlarmBrowseFile.text = displayName
+                Toast.makeText(this, "Đã chọn thư mục: $displayName", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -235,9 +249,45 @@ class AddEditAlarmActivity : BaseActivity(),
         binding.addAlarmEdtAlarmName.setText(mOldAlarm?.name)
         binding.addAlarmTvChooseDate.text = TimeUtil.getDateFromTimeStamp(mOldAlarm!!.time)
         binding.addAlarmTvChooseTime.text = TimeUtil.getTimeFromTimeStamp(mOldAlarm!!.time)
+        
         if (!TextUtils.isEmpty(mOldAlarm!!.uriFileFolder)) {
             mEncodedURIMP3 = mOldAlarm!!.uriFileFolder
+            // Show file name on button
+            try {
+                val uri = android.net.Uri.parse(mEncodedURIMP3)
+                
+                // Try to get display name from content resolver
+                var displayName: String? = null
+                try {
+                    contentResolver.query(uri, null, null, null, null)?.use { cursor ->
+                        if (cursor.moveToFirst()) {
+                            val displayNameIndex = cursor.getColumnIndex(android.provider.OpenableColumns.DISPLAY_NAME)
+                            if (displayNameIndex != -1) {
+                                displayName = cursor.getString(displayNameIndex)
+                            }
+                        }
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+                
+                // Fallback to last path segment
+                if (displayName.isNullOrBlank()) {
+                    displayName = uri.lastPathSegment
+                }
+                
+                // Show display name or default text
+                if (!displayName.isNullOrBlank()) {
+                    binding.addAlarmBrowseFile.text = displayName
+                } else {
+                    binding.addAlarmBrowseFile.text = getString(R.string.add_alarm_choose_audio)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                binding.addAlarmBrowseFile.text = getString(R.string.add_alarm_choose_audio)
+            }
         }
+        
         binding.addAlarmSpLoopType.setSelection(mOldAlarm!!.loopType)
         binding.addAlarmEdtLoopTimes.setText(mOldAlarm!!.loopTime.toString())
         binding.addAlarmEdtTimeAlarm.setText(mOldAlarm!!.timeAlarm.toString())
@@ -276,6 +326,10 @@ class AddEditAlarmActivity : BaseActivity(),
         binding.addAlarmTvChooseDate.setOnClickListener {
             val dpd = DatePickerDialog(this, this, mYear, mMonth, mDay)
             dpd.show()
+        }
+
+        binding.addAlarmBrowseFile.setOnClickListener {
+            showFileChooser()
         }
 
         binding.addAlarmTvChooseTime.setOnClickListener {
