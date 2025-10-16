@@ -19,6 +19,9 @@ public class MyPlayer {
     public static final int PLAY_FILE = 100;
 
     public static final int PLAY_FOLDER = 101;
+    
+    // Static instance to allow stopping music from anywhere
+    private static MyPlayer currentInstance;
 
     private MediaPlayer mMediaPlayer;
 
@@ -38,6 +41,16 @@ public class MyPlayer {
 
     public MyPlayer(Context context) {
         mContext = context;
+        // Keep track of current instance
+        currentInstance = this;
+    }
+    
+    // Static method to stop current playing music
+    public static void stopCurrentMusic() {
+        if (currentInstance != null) {
+            currentInstance.stop();
+            currentInstance.release();
+        }
     }
 
     private void setupPlayFile(String fileName, int playingPosition) {

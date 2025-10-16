@@ -43,6 +43,10 @@ class AlarmWorker(appContext: Context, workerParams: WorkerParameters) : Worker(
         
         Log.d("AlarmWorker", "Alarm found: name=${alarm.name}, time=${alarm.time}, countLoopTimes=${alarm.countLoopTimes}, loopTime=${alarm.loopTime}")
 
+        // Only show notification and popup on FIRST trigger (countLoopTimes = 0)
+        // For subsequent loops, we'll just restart music via broadcast
+        val isFirstTrigger = alarm.countLoopTimes == 0
+
         // Check if we've reached the max loop times
         if (alarm.countLoopTimes >= alarm.loopTime && alarm.loopTime > 0) {
             Log.d("AlarmWorker", "Alarm has completed all ${alarm.loopTime} loops. Stopping.")
@@ -66,19 +70,26 @@ class AlarmWorker(appContext: Context, workerParams: WorkerParameters) : Worker(
             .toBlocking()
             .firstOrDefault(false)
 
-        // Initialize media player for alarm sound
-        initializeMediaPlayer(alarm)
+        if (isFirstTrigger) {
+            // FIRST TRIGGER: Initialize everything (notification, popup, music)
+            // Initialize media player for alarm sound
+            initializeMediaPlayer(alarm)
 
-        // Show notification
-        showAlarmNotification(alarm)
+            // Show notification
+            showAlarmNotification(alarm)
 
-        // Launch AlarmActivity to show alarm popup (works even when app is in background)
-        val intent = Intent(applicationContext, ppapps.phapamnhacnho.modules.alarmlist.AlarmActivity::class.java)
-        intent.action = ppapps.phapamnhacnho.modules.alarmlist.AlarmActivity.BROADCAST_STRING_SHOW_ALARM_POPUP
-        intent.putExtra(AlarmConstant.KEY_ALARM, com.google.gson.Gson().toJson(alarm))
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        applicationContext.startActivity(intent)
-        Log.d("AlarmWorker", "AlarmActivity launched to show alarm popup")
+            // Launch AlarmActivity to show alarm popup (works even when app is in background)
+            val intent = Intent(applicationContext, ppapps.phapamnhacnho.modules.alarmlist.AlarmActivity::class.java)
+            intent.action = ppapps.phapamnhacnho.modules.alarmlist.AlarmActivity.BROADCAST_STRING_SHOW_ALARM_POPUP
+            intent.putExtra(AlarmConstant.KEY_ALARM, com.google.gson.Gson().toJson(alarm))
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            applicationContext.startActivity(intent)
+            Log.d("AlarmWorker", "AlarmActivity launched to show alarm popup")
+        } else {
+            // SUBSEQUENT LOOPS: Only restart music, no notification/popup
+            Log.d("AlarmWorker", "Loop ${alarm.countLoopTimes}/${alarm.loopTime}: Restarting music only")
+            restartMusic(alarm)
+        }
 
         // If not reached max loops, schedule to repeat after timeAlarm duration
         if (alarm.countLoopTimes < alarm.loopTime) {
@@ -94,6 +105,26 @@ class AlarmWorker(appContext: Context, workerParams: WorkerParameters) : Worker(
         }
 
         return Result.success()
+    }
+    
+    private fun restartMusic(alarm: ppapps.phapamnhacnho.model.AlarmModel) {
+        try {
+            // Stop current music
+            myPlayer?.stop()
+            myPlayer?.release()
+            myPlayer = null
+            
+            // Restart music from beginning
+            Log.d("AlarmWorker", "Restarting music: fileType=${alarm.fileType}, uri=${alarm.uriFileFolder}")
+            myPlayer = MyPlayer(applicationContext)
+            myPlayer?.setPlayType(alarm.fileType)
+            myPlayer?.setPlayFile(alarm.uriFileFolder)
+            myPlayer?.initialMediaPlayer(alarm.fileIndex, 0) // Start from position 0
+            Log.d("AlarmWorker", "Music restarted successfully")
+        } catch (e: Exception) {
+            Log.e("AlarmWorker", "Failed to restart music: ${e.message}", e)
+            e.printStackTrace()
+        }
     }
 
     private fun initializeMediaPlayer(alarm: ppapps.phapamnhacnho.model.AlarmModel) {

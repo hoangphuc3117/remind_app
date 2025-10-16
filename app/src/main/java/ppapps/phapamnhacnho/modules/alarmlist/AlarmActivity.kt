@@ -45,6 +45,7 @@ class AlarmActivity : BaseActivity() {
         const val BROADCAST_STRING_CLOSE_DIALOG = "ppapps.phapamnhacnho.closedialog"
         const val BROADCAST_STRING_REFRESH_ALARMS = "ppapps.phapamnhacnho.refreshalarms"
         const val BROADCAST_STRING_SHOW_ALARM_POPUP = "ppapps.phapamnhacnho.showalarmpopup"
+        const val BROADCAST_STRING_STOP_MUSIC = "ppapps.phapamnhacnho.stopmusic"
         private const val TAG = "AlarmActivity"
     }
     
@@ -303,7 +304,8 @@ class AlarmActivity : BaseActivity() {
         
         val intent = Intent(this, ppapps.phapamnhacnho.modules.alarmtrigger.AlarmTriggerActivity::class.java)
         intent.putExtra(AlarmConstant.KEY_ALARM, Gson().toJson(alarm))
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        // Use SINGLE_TOP to avoid killing existing activity and restarting music
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
         startActivity(intent)
     }
 

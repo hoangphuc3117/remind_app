@@ -1,6 +1,9 @@
 package ppapps.phapamnhacnho.modules.alarmtrigger
 
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Build
 import android.os.Bundle
 import android.view.View
@@ -18,9 +21,17 @@ class AlarmTriggerActivity : BaseActivity() {
 
     private lateinit var binding: ActivityAlarmTriggerBinding
     private var alarm: AlarmModel? = null
+    private var closeReceiver: BroadcastReceiver? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        
+        // Check if this intent is to finish the activity
+        if (intent.getBooleanExtra("FINISH_ACTIVITY", false)) {
+            android.util.Log.d(TAG, "Received FINISH_ACTIVITY flag, closing...")
+            finish()
+            return
+        }
         
         // Show on lock screen and turn screen on
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
@@ -50,6 +61,49 @@ class AlarmTriggerActivity : BaseActivity() {
         }
 
         setupClickListeners()
+        registerCloseReceiver()
+    }
+    
+    private fun registerCloseReceiver() {
+        // Register receiver to listen for close dialog broadcast
+        val intentFilter = IntentFilter(AlarmActivity.BROADCAST_STRING_CLOSE_DIALOG)
+        closeReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                android.util.Log.d("AlarmTriggerActivity", "Received close broadcast: ${intent?.action}")
+                // Close this activity when dismiss is triggered
+                finishAndRemoveTask()  // Use this instead of finish() to ensure complete removal
+            }
+        }
+        
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(closeReceiver, intentFilter, Context.RECEIVER_NOT_EXPORTED)
+        } else {
+            registerReceiver(closeReceiver, intentFilter)
+        }
+        android.util.Log.d("AlarmTriggerActivity", "Close receiver registered for action: ${AlarmActivity.BROADCAST_STRING_CLOSE_DIALOG}")
+    }
+    
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        
+        // Handle FINISH_ACTIVITY flag when activity is already running (singleTop)
+        if (intent.getBooleanExtra("FINISH_ACTIVITY", false)) {
+            android.util.Log.d(TAG, "Received FINISH_ACTIVITY in onNewIntent, closing...")
+            finish()
+        }
+    }
+    
+    override fun onDestroy() {
+        super.onDestroy()
+        // Unregister receiver to avoid memory leak
+        try {
+            if (closeReceiver != null) {
+                unregisterReceiver(closeReceiver)
+                closeReceiver = null
+            }
+        } catch (e: Exception) {
+            // Receiver may not be registered
+        }
     }
 
     private fun displayAlarmInfo() {
@@ -86,6 +140,9 @@ class AlarmTriggerActivity : BaseActivity() {
     }
 
     private fun dismissAlarm() {
+        // Stop music immediately
+        ppapps.phapamnhacnho.modules.mediaplayer.MyPlayer.stopCurrentMusic()
+        
         // Cancel the notification
         val notificationManager = getSystemService(android.content.Context.NOTIFICATION_SERVICE) as android.app.NotificationManager
         notificationManager.cancel(AlarmConstant.ALARM_NOTIFICATION_ID)
